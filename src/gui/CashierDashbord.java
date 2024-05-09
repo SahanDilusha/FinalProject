@@ -350,7 +350,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                     .addComponent(jLabel12)
                     .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
+                .addGap(24, 24, 24))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
