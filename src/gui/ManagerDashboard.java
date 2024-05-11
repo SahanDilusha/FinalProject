@@ -5,6 +5,7 @@
 package gui;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -18,9 +19,70 @@ public class ManagerDashboard extends javax.swing.JFrame {
     /**
      * Creates new form ManagerDashboard
      */
+    private final void ShowDH() {
+
+        jPanelMain.removeAll();
+        jPanelMain.add(jPanelHome);
+        jPanelMain.repaint();
+        jPanelMain.revalidate();
+        jButton2.setBackground(Color.red);
+
+    }
+
+    private final void ShowInvoiceMG() {
+
+        jPanelMain.removeAll();
+        jPanelMain.add(jPanelInvoices);
+        jPanelMain.repaint();
+        jPanelMain.revalidate();
+        jButton3.setBackground(Color.red);
+
+    }
+
+    private final void ShowManageStock() {
+        jPanelMain.removeAll();
+        jPanelMain.add(jPanelManageStock);
+        jPanelMain.repaint();
+        jPanelMain.revalidate();
+        jButton4.setBackground(Color.red);
+    }
+
+    private final void ShowManageEmployees() {
+        jPanelMain.removeAll();
+        jPanelMain.add(jPanelManageEmployees);
+        jPanelMain.repaint();
+        jPanelMain.revalidate();
+        jButton5.setBackground(Color.red);
+    }
+
+    private final void ShowManageCustomers() {
+        jPanelMain.removeAll();
+        jPanelMain.add(jPanelManageCustomers);
+        jPanelMain.repaint();
+        jPanelMain.revalidate();
+        jButton6.setBackground(Color.red);
+    }
+
+    private final void ShowSettings() {
+        jPanelMain.removeAll();
+        jPanelMain.add(jPanelSettings);
+        jPanelMain.repaint();
+        jPanelMain.revalidate();
+        jButton7.setBackground(Color.red);
+    }
+
+    private final void resetBTNColor() {
+        jButton2.setBackground(new Color(0, 0, 51, 255));
+        jButton3.setBackground(new Color(0, 0, 51, 255));
+        jButton4.setBackground(new Color(0, 0, 51, 255));
+        jButton5.setBackground(new Color(0, 0, 51, 255));
+        jButton6.setBackground(new Color(0, 0, 51, 255));
+        jButton7.setBackground(new Color(0, 0, 51, 255));
+    }
+
     public ManagerDashboard() {
         initComponents();
-
+        jButton2.setBackground(Color.red);
     }
 
     /**
@@ -99,6 +161,21 @@ public class ManagerDashboard extends javax.swing.JFrame {
         jComboBox3 = new javax.swing.JComboBox<>();
         jLabel22 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        jPanelManageStock = new javax.swing.JPanel();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jPanel21 = new javax.swing.JPanel();
+        jPanel22 = new javax.swing.JPanel();
+        jTextField2 = new javax.swing.JTextField();
+        jButton12 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jPanel20 = new javax.swing.JPanel();
+        jPanel19 = new javax.swing.JPanel();
+        jPanel18 = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        jPanelManageEmployees = new javax.swing.JPanel();
+        jPanelManageCustomers = new javax.swing.JPanel();
+        jPanelSettings = new javax.swing.JPanel();
 
         jButton1.setText("jButton1");
 
@@ -171,11 +248,11 @@ public class ManagerDashboard extends javax.swing.JFrame {
         jPanel10.setBackground(new java.awt.Color(0, 0, 51));
         jPanel10.setLayout(new java.awt.GridLayout(1, 1, 10, 10));
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setBackground(new java.awt.Color(0, 0, 51));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(226, 211, 211));
         jButton2.setText("Dashdoard");
-        jButton2.setContentAreaFilled(false);
-        jButton2.setOpaque(true);
+        jButton2.setBorder(null);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -183,11 +260,11 @@ public class ManagerDashboard extends javax.swing.JFrame {
         });
         jPanel10.add(jButton2);
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton3.setBackground(new java.awt.Color(0, 0, 51));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(226, 211, 211));
         jButton3.setText("Manage Invoices");
-        jButton3.setContentAreaFilled(false);
-        jButton3.setOpaque(true);
+        jButton3.setBorder(null);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -195,11 +272,11 @@ public class ManagerDashboard extends javax.swing.JFrame {
         });
         jPanel10.add(jButton3);
 
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setBackground(new java.awt.Color(0, 0, 51));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(226, 211, 211));
         jButton4.setText("Manage Stock");
-        jButton4.setContentAreaFilled(false);
-        jButton4.setOpaque(true);
+        jButton4.setBorder(null);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -207,11 +284,11 @@ public class ManagerDashboard extends javax.swing.JFrame {
         });
         jPanel10.add(jButton4);
 
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton5.setBackground(new java.awt.Color(0, 0, 51));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(226, 211, 211));
         jButton5.setText("Manage Employees");
-        jButton5.setContentAreaFilled(false);
-        jButton5.setOpaque(true);
+        jButton5.setBorder(null);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -219,11 +296,11 @@ public class ManagerDashboard extends javax.swing.JFrame {
         });
         jPanel10.add(jButton5);
 
-        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton6.setBackground(new java.awt.Color(0, 0, 51));
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(226, 211, 211));
         jButton6.setText("Manage Customers");
-        jButton6.setContentAreaFilled(false);
-        jButton6.setOpaque(true);
+        jButton6.setBorder(null);
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -231,11 +308,16 @@ public class ManagerDashboard extends javax.swing.JFrame {
         });
         jPanel10.add(jButton6);
 
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton7.setBackground(new java.awt.Color(0, 0, 51));
+        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton7.setForeground(new java.awt.Color(226, 211, 211));
         jButton7.setText("Settings");
-        jButton7.setContentAreaFilled(false);
-        jButton7.setOpaque(true);
+        jButton7.setBorder(null);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         jPanel10.add(jButton7);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -776,10 +858,183 @@ public class ManagerDashboard extends javax.swing.JFrame {
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jPanelMain.add(jPanelInvoices, "card3");
+
+        jTabbedPane2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jPanel21.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jButton12.setText("Search");
+
+        javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
+        jPanel22.setLayout(jPanel22Layout);
+        jPanel22Layout.setHorizontalGroup(
+            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel22Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton12)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel22Layout.setVerticalGroup(
+            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel22Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField2)
+                    .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Product Id", "Product Name", "Total Items", "Total Stock", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable2);
+
+        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
+        jPanel21.setLayout(jPanel21Layout);
+        jPanel21Layout.setHorizontalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1493, Short.MAX_VALUE)
+        );
+        jPanel21Layout.setVerticalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane2.addTab("Stock", jPanel21);
+
+        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        jPanel20.setLayout(jPanel20Layout);
+        jPanel20Layout.setHorizontalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1493, Short.MAX_VALUE)
+        );
+        jPanel20Layout.setVerticalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 603, Short.MAX_VALUE)
+        );
+
+        jTabbedPane2.addTab("Add New Stock", jPanel20);
+
+        javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
+        jPanel19.setLayout(jPanel19Layout);
+        jPanel19Layout.setHorizontalGroup(
+            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1493, Short.MAX_VALUE)
+        );
+        jPanel19Layout.setVerticalGroup(
+            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 603, Short.MAX_VALUE)
+        );
+
+        jTabbedPane2.addTab("Send Ordering", jPanel19);
+
+        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
+        jPanel18.setLayout(jPanel18Layout);
+        jPanel18Layout.setHorizontalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1493, Short.MAX_VALUE)
+        );
+        jPanel18Layout.setVerticalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 603, Short.MAX_VALUE)
+        );
+
+        jTabbedPane2.addTab("Remove Stock", jPanel18);
+
+        jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jLabel23.setText("Manage Stock");
+
+        javax.swing.GroupLayout jPanelManageStockLayout = new javax.swing.GroupLayout(jPanelManageStock);
+        jPanelManageStock.setLayout(jPanelManageStockLayout);
+        jPanelManageStockLayout.setHorizontalGroup(
+            jPanelManageStockLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelManageStockLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelManageStockLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane2)
+                    .addGroup(jPanelManageStockLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanelManageStockLayout.setVerticalGroup(
+            jPanelManageStockLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelManageStockLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel23)
+                .addGap(29, 29, 29)
+                .addComponent(jTabbedPane2))
+        );
+
+        jPanelMain.add(jPanelManageStock, "card4");
+
+        javax.swing.GroupLayout jPanelManageEmployeesLayout = new javax.swing.GroupLayout(jPanelManageEmployees);
+        jPanelManageEmployees.setLayout(jPanelManageEmployeesLayout);
+        jPanelManageEmployeesLayout.setHorizontalGroup(
+            jPanelManageEmployeesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1505, Short.MAX_VALUE)
+        );
+        jPanelManageEmployeesLayout.setVerticalGroup(
+            jPanelManageEmployeesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 712, Short.MAX_VALUE)
+        );
+
+        jPanelMain.add(jPanelManageEmployees, "card5");
+
+        javax.swing.GroupLayout jPanelManageCustomersLayout = new javax.swing.GroupLayout(jPanelManageCustomers);
+        jPanelManageCustomers.setLayout(jPanelManageCustomersLayout);
+        jPanelManageCustomersLayout.setHorizontalGroup(
+            jPanelManageCustomersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1505, Short.MAX_VALUE)
+        );
+        jPanelManageCustomersLayout.setVerticalGroup(
+            jPanelManageCustomersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 712, Short.MAX_VALUE)
+        );
+
+        jPanelMain.add(jPanelManageCustomers, "card6");
+
+        javax.swing.GroupLayout jPanelSettingsLayout = new javax.swing.GroupLayout(jPanelSettings);
+        jPanelSettings.setLayout(jPanelSettingsLayout);
+        jPanelSettingsLayout.setHorizontalGroup(
+            jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1505, Short.MAX_VALUE)
+        );
+        jPanelSettingsLayout.setVerticalGroup(
+            jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 712, Short.MAX_VALUE)
+        );
+
+        jPanelMain.add(jPanelSettings, "card7");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -803,18 +1058,18 @@ public class ManagerDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        jPanelMain.removeAll();
-        jPanelMain.add(jPanelHome);
-        jPanelMain.repaint();
-        jPanelMain.revalidate();
+        resetBTNColor();
+        ShowDH();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        resetBTNColor();
+        ShowManageEmployees();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        resetBTNColor();
+        ShowManageCustomers();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
@@ -822,19 +1077,23 @@ public class ManagerDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        resetBTNColor();
+        ShowManageStock();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        jPanelMain.removeAll();
-        jPanelMain.add(jPanelInvoices);
-        jPanelMain.repaint();
-        jPanelMain.revalidate();
+        resetBTNColor();
+        ShowInvoiceMG();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        resetBTNColor();
+        ShowSettings();
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -854,6 +1113,7 @@ public class ManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -882,6 +1142,7 @@ public class ManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -898,7 +1159,12 @@ public class ManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel21;
+    private javax.swing.JPanel jPanel22;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -909,14 +1175,22 @@ public class ManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelHome;
     private javax.swing.JPanel jPanelInvoices;
     private javax.swing.JPanel jPanelMain;
+    private javax.swing.JPanel jPanelManageCustomers;
+    private javax.swing.JPanel jPanelManageEmployees;
+    private javax.swing.JPanel jPanelManageStock;
+    private javax.swing.JPanel jPanelSettings;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private com.toedter.components.JSpinField jSpinField1;
     private com.toedter.components.JSpinField jSpinField2;
+    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
