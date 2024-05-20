@@ -884,6 +884,8 @@ public class CashierDashbord extends javax.swing.JFrame {
         jLabel29.setText("  ");
         jLabel29.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM));
 
+        jPanel8.setBackground(new java.awt.Color(204, 239, 250));
+
         jLabel30.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel30.setText("Payment Method");
 
