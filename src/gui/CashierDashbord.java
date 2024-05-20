@@ -346,7 +346,7 @@ public class CashierDashbord extends javax.swing.JFrame {
         jLabel40.setText("Username - ");
 
         jLabel41.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel41.setText("User Id - ");
+        jLabel41.setText("Full Name - ");
 
         jLabel42.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel42.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -471,11 +471,11 @@ public class CashierDashbord extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel40)
                     .addComponent(jLabel42))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel41)
-                    .addComponent(jLabel43))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel43)
+                    .addComponent(jLabel41))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel47)
                     .addComponent(jLabel50))
@@ -1024,7 +1024,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton31, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton30, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
