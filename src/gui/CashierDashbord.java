@@ -905,6 +905,7 @@ public class CashierDashbord extends javax.swing.JFrame {
         jTextField6.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextField6.setText("0.00");
 
+        jFormattedTextField1.setEditable(false);
         jFormattedTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jFormattedTextField1.setText("0.00");
         jFormattedTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
