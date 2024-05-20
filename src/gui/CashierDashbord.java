@@ -27,26 +27,10 @@ public class CashierDashbord extends javax.swing.JFrame {
      * Creates new form CashierDashbord
      */
     
-    private void test(){
-    
-        try {
-          ResultSet r = MySQL.execute("SELECT * FROM `branch`");
-          
-          if(r.next()){
-              jLabel50.setText(r.getString("b_name"));
-          }
-          
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-    }
-    
     public CashierDashbord() {
         initComponents();
         jLabel38.setText(new SimpleDateFormat("dd MMMM yyyy").format(new Date()));
-        test();
-       
+     
     }
 
     /**

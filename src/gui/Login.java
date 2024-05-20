@@ -7,6 +7,7 @@ package gui;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import java.time.Year;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -233,6 +234,10 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (jTextField1.getText().isBlank()) {
+            JOptionPane.showMessageDialog(this, "please enter your username!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
+        }else if (jPasswordField1.getPassword().toString().isBlank()) {
+            JOptionPane.showMessageDialog(this, "please enter your password!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
+        }else if (rootPaneCheckingEnabled) {
             
         }
     }//GEN-LAST:event_jButton2ActionPerformed
