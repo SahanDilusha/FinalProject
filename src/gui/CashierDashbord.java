@@ -9,11 +9,13 @@ import static java.awt.Frame.MAXIMIZED_BOTH;
 import javax.swing.JFrame;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.Date;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import model.MySQL;
 
 /**
  *
@@ -24,9 +26,26 @@ public class CashierDashbord extends javax.swing.JFrame {
     /**
      * Creates new form CashierDashbord
      */
+    
+    private void test(){
+    
+        try {
+          ResultSet r = MySQL.execute("SELECT * FROM `branch`");
+          
+          if(r.next()){
+              jLabel50.setText(r.getString("b_name"));
+          }
+          
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+    }
+    
     public CashierDashbord() {
         initComponents();
         jLabel38.setText(new SimpleDateFormat("dd MMMM yyyy").format(new Date()));
+        test();
        
     }
 
