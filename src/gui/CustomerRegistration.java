@@ -57,7 +57,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
                 model.addRow(vector);
             }
-            
+
             jTable1.setModel(model);
 
         } catch (Exception e) {
@@ -173,6 +173,12 @@ public class CustomerRegistration extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Mobile");
 
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("First Name");
 
@@ -254,6 +260,11 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
         jComboBox1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name ASC", "Name DESC", "FirstPoints ASC", "Points DESC" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -318,6 +329,11 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -398,7 +414,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
         } else if (firstName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Customer First Name", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (lastName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Customer Last Name", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please Enter Customer Last Email", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Customer Email", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@"
@@ -414,8 +430,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, "Coustomer Alredy Registered", "Warning", JOptionPane.WARNING_MESSAGE);
                 } else {
 
-                    MySQL.execute("INSERT INTO `customers`(`cu_mobile`,`cu_fname`,`cu_lname`,`cu_email`,`cu_point`)"
-                            + "VALUES('" + mobile + "','" + firstName + "','" + lastName + "','" + email + "','0')");
+                    MySQL.execute("INSERT INTO `customers`(`cu_mobile`,`cu_fname`,`cu_lname`,`cu_email`,`cu_point`,`cu_users`)"
+                            + "VALUES('" + mobile + "','" + firstName + "','" + lastName + "','" + email + "','0','1')");
 
                     reset();
                     loadCustomers("cu_f_name", "ASC", jTextField1.getText());
@@ -491,6 +507,50 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        
+        int row = jTable1.getSelectedRow();
+
+        String mobile = String.valueOf(jTable1.getValueAt(row, 0));
+        String firstName = String.valueOf(jTable1.getValueAt(row, 1));
+        String lastName = String.valueOf(jTable1.getValueAt(row, 2));
+        String email = String.valueOf(jTable1.getValueAt(row, 3));
+
+        jTextField1.setText(mobile);
+        jTextField2.setText(firstName);
+        jTextField3.setText(lastName);
+        jTextField4.setText(email);
+
+        jTextField1.setEditable(false);
+        jButton1.setEnabled(false);
+
+        try {
+
+            ResultSet resultSet = MySQL.execute("SELECT ");
+
+            if (resultSet.next()) {
+                String count = resultSet.getString(1);
+                jLabel7.setText(count);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        
+        search();
+        
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        
+        search();
+        
+    }//GEN-LAST:event_jTextField1KeyReleased
 
     /**
      * @param args the command line arguments
