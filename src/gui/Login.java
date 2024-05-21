@@ -8,6 +8,7 @@ package gui;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.time.Year;
 import javax.swing.JOptionPane;
+import model.MySQL;
 
 /**
  *
@@ -220,9 +221,9 @@ public class Login extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
-            
+
             jPasswordField1.setEchoChar((char) 0);
-            
+
         } else {
             jPasswordField1.setEchoChar('\u25cf');
         }
@@ -235,10 +236,17 @@ public class Login extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (jTextField1.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "please enter your username!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
-        }else if (jPasswordField1.getPassword().toString().isBlank()) {
+        } else if (String.valueOf(jPasswordField1.getPassword()).isBlank()) {
             JOptionPane.showMessageDialog(this, "please enter your password!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
-        }else if (rootPaneCheckingEnabled) {
-            
+        } else if (!String.valueOf(jPasswordField1.getPassword()).matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")) {
+            JOptionPane.showMessageDialog(this, "invalid password", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                MySQL.execute("");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -246,9 +254,9 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         FlatLightLaf.setup();
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
