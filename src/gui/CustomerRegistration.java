@@ -22,7 +22,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
     public CustomerRegistration(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        loadCustomers("cu_f_name", "ASC", jTextField1.getText());
+        loadCustomers("cu_fname", "ASC", jTextField1.getText());
     }
 
     private void reset() {
@@ -41,7 +41,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
         try {
 
-            ResultSet resultSet = MySQL.execute("SELECT * FROM `customers` WHERE `cu_mobile` LIKE '" + mobile + "' ORDER BY '" + column + "' '" + method + "' ");
+            ResultSet resultSet = MySQL.execute("SELECT * FROM `customers`");
 
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
@@ -50,13 +50,15 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
                 Vector<String> vector = new Vector<>();
                 vector.add(resultSet.getString("cu_mobile"));
-                vector.add(resultSet.getString("cu_f_name"));
-                vector.add(resultSet.getString("cu_l_name"));
+                vector.add(resultSet.getString("cu_fname"));
+                vector.add(resultSet.getString("cu_lname"));
                 vector.add(resultSet.getString("cu_email"));
                 vector.add(resultSet.getString("cu_point"));
 
                 model.addRow(vector);
             }
+            
+            jTable1.setModel(model);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -412,7 +414,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, "Coustomer Alredy Registered", "Warning", JOptionPane.WARNING_MESSAGE);
                 } else {
 
-                    MySQL.execute("INSERT INTO `customers`(`cu_mobile`,`cu_f_name`,`cu_l_name`,`cu_email`,`cu_point`)"
+                    MySQL.execute("INSERT INTO `customers`(`cu_mobile`,`cu_fname`,`cu_lname`,`cu_email`,`cu_point`)"
                             + "VALUES('" + mobile + "','" + firstName + "','" + lastName + "','" + email + "','0')");
 
                     reset();
