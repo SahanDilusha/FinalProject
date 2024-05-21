@@ -15,6 +15,7 @@ import java.time.Year;
 import java.util.Date;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JLabel;
 import model.MySQL;
 
 /**
@@ -26,11 +27,24 @@ public class CashierDashbord extends javax.swing.JFrame {
     /**
      * Creates new form CashierDashbord
      */
-    
+    private void startClock() {
+        Thread clockThread = new Thread(() -> {
+            while (true) {
+                jLabel37.setText(new SimpleDateFormat("hh:mm:ss aa").format(new Date()));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        clockThread.start();
+    }
+
     public CashierDashbord() {
         initComponents();
         jLabel38.setText(new SimpleDateFormat("dd MMMM yyyy").format(new Date()));
-     
+        startClock();
     }
 
     /**
@@ -1244,26 +1258,6 @@ public class CashierDashbord extends javax.swing.JFrame {
 
         FlatLightLaf.setup();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                CashierDashbord home = new CashierDashbord();
-                home.setExtendedState(MAXIMIZED_BOTH);
-                home.setVisible(true);
-                new Thread(() -> {
-
-                    while (true) {
-                        home.jLabel37.setText(new SimpleDateFormat("hh:mm:ss aa").format(new Date()));
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }).start();
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -8,6 +8,7 @@ package gui;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.sql.ResultSet;
 import java.time.Year;
+import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import model.MySQL;
 
@@ -16,6 +17,8 @@ import model.MySQL;
  * @author sahan
  */
 public class Login extends javax.swing.JFrame {
+
+    private int at = 0;
 
     /**
      * Creates new form Login
@@ -50,7 +53,6 @@ public class Login extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -200,19 +202,6 @@ public class Login extends javax.swing.JFrame {
 
         main.add(jPanel2, "card2");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 551, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 507, Short.MAX_VALUE)
-        );
-
-        main.add(jPanel3, "card3");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -253,13 +242,61 @@ public class Login extends javax.swing.JFrame {
         } else if (String.valueOf(jPasswordField1.getPassword()).isBlank()) {
             JOptionPane.showMessageDialog(this, "please enter your password!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
         } else if (!String.valueOf(jPasswordField1.getPassword()).matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")) {
-            JOptionPane.showMessageDialog(this, "invalid password", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "invalid password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
         } else {
-            try {
-                ResultSet result = MySQL.execute("SELECT * FROM `users` WHERE `users`.`us_password` = '" + String.valueOf(jPasswordField1.getPassword()) + "' AND `users`.`us_username` = '" + jTextField1.getText() + "' AND `users`.`us_status`='1';");
 
-                if (result.next()) {
-                    JOptionPane.showMessageDialog(this, "done", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+            try {
+
+                if (at != 3) {
+
+                    ResultSet result = MySQL.execute("SELECT * FROM `users` WHERE `users`.`us_password` = '" + String.valueOf(jPasswordField1.getPassword()) + "' AND `users`.`us_username` = '" + jTextField1.getText() + "';");
+
+                    if (result.next()) {
+
+                        if (result.getInt("us_status") != 1) {
+                            at += 1;
+                            JOptionPane.showMessageDialog(this, "Your account is currently disabled!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+                        } else {
+
+                            Preferences preferences = Preferences.userRoot();
+
+                            preferences.put("id", result.getString("us_id"));
+                            preferences.put("username", result.getString("us_username"));
+                            preferences.put("first_name", result.getString("us_fname"));
+                            preferences.put("last_name", result.getString("us_lname"));
+                            preferences.put("email", result.getString("us_email"));
+                            preferences.put("mobile", result.getString("us_mobile"));
+
+                            if (result.getInt("us_status") == 1) {
+
+                                this.dispose();
+                                CashierDashbord ca = new CashierDashbord();
+                                ca.setVisible(true);
+                                ca.setExtendedState(MAXIMIZED_BOTH);
+
+                            } else if (result.getInt("us_status") == 2) {
+
+                            } else {
+                                at += 1;
+                                JOptionPane.showMessageDialog(this, "invalid username or password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+
+                    } else {
+                        at += 1;
+                        JOptionPane.showMessageDialog(this, "invalid username or password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this, "attempt are over!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+
+                    ResultSet result = MySQL.execute("SELECT * FROM `users` WHERE `users`.`us_username` = '" + jTextField1.getText() + "' AND `users`.`us_status`='1'");
+
+                    if (result.next()) {
+                        MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_username` = '" + jTextField1.getText() + "';");
+                    }
+
                 }
 
             } catch (Exception e) {
@@ -297,7 +334,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel main;
