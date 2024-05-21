@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
@@ -26,36 +27,38 @@ import model.MySQL;
  * @author chamu
  */
 public class CashierDashbord extends javax.swing.JFrame {
-
+    
     Preferences preferences = Preferences.userRoot();
+    
+    HashMap<String, Object> invoiceItemMap = new HashMap<>();
 
     /**
      * Creates new form CashierDashbord
      */
     private final void LodeingProduct() {
-
+        
         String q = "SELECT * FROM `product` INNER JOIN `barnd`  ON `product`.`p_barnd` = `barnd`.`br_id` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock` WHERE `product`.`p_status` = '1'";
-
+        
         if (!jTextField1.getText().isBlank()) {
             q += "AND `product`.`p_id` LIKE '" + jTextField1.getText() + "%'";
         }
-
+        
         if (!jTextField2.getText().isBlank()) {
             q += "AND `product`.`p_name` LIKE '" + jTextField2.getText() + "%'";
         }
-
+        
         try {
-
+            
             ResultSet resultSet = MySQL.execute(q);
-
+            
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-
+            
             model.setRowCount(0);
-
+            
             while (resultSet.next()) {
-
+                
                 Vector<String> vector = new Vector<>();
-
+                
                 vector.add(resultSet.getString("p_id"));
                 vector.add(resultSet.getString("sto_id"));
                 vector.add(resultSet.getString("p_name"));
@@ -64,27 +67,34 @@ public class CashierDashbord extends javax.swing.JFrame {
                 vector.add(resultSet.getString("stq_qty"));
                 vector.add(resultSet.getString("sto_exp"));
                 vector.add(resultSet.getString("sto_mfg"));
-
+                
                 model.addRow(vector);
-
+                
             }
-
+            
             jTable1.setModel(model);
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    }
-    
-    public final void SetItem(){
-    
-    
         
+    }
+    
+    public final void SetItem() {
+        
+        int row = jTable1.getSelectedRow();
+        
+        jLabel10.setText(String.valueOf(jTable1.getValueAt(row, 2)));
+        jTextField8.setText(String.valueOf(jTable1.getValueAt(row, 4)));
+        
+    }
+    
+    
+    public final void SetInvoiceItem(){
     
     
     }
-
+    
     private void startClock() {
         Thread clockThread = new Thread(() -> {
             while (true) {
@@ -98,14 +108,14 @@ public class CashierDashbord extends javax.swing.JFrame {
         });
         clockThread.start();
     }
-
+    
     public CashierDashbord() {
         initComponents();
         jLabel38.setText(new SimpleDateFormat("dd MMMM yyyy").format(new Date()));
         jLabel42.setText(preferences.get("username", "default_value"));
         jLabel43.setText(preferences.get("first_name", "default_value") + " " + preferences.get("last_name", "default_value"));
         jLabel50.setText(preferences.get("branch", "default_value"));
-
+        
         startClock();
         LodeingProduct();
     }
@@ -810,11 +820,11 @@ public class CashierDashbord extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Product Id", "Stock Id", "Product Name", "Brand Name", "Selling Price", "QTY", "Date of Expier", "Date of Manufacture"
+                "Product Id", "Stock Id", "Product Name", "Brand Name", "Selling Price", "QTY", "Total", "Date of Expier", "Date of Manufacture"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -831,6 +841,7 @@ public class CashierDashbord extends javax.swing.JFrame {
             jTable2.getColumnModel().getColumn(5).setResizable(false);
             jTable2.getColumnModel().getColumn(6).setResizable(false);
             jTable2.getColumnModel().getColumn(7).setResizable(false);
+            jTable2.getColumnModel().getColumn(8).setResizable(false);
         }
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -937,6 +948,11 @@ public class CashierDashbord extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTable1);
@@ -1308,7 +1324,7 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton22ActionPerformed
 
     private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
-        new CustomerRegistration(this,true).setVisible(true);
+        new CustomerRegistration(this, true).setVisible(true);
     }//GEN-LAST:event_jButton29ActionPerformed
 
     private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
@@ -1360,13 +1376,17 @@ public class CashierDashbord extends javax.swing.JFrame {
         LodeingProduct();
     }//GEN-LAST:event_jTextField2KeyReleased
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        SetItem();
+    }//GEN-LAST:event_jTable1MouseClicked
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
+        
         FlatLightLaf.setup();
-
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
