@@ -249,7 +249,7 @@ public class Login extends javax.swing.JFrame {
 
                 if (at != 3) {
 
-                    ResultSet result = MySQL.execute("SELECT * FROM `users` WHERE `users`.`us_password` = '" + String.valueOf(jPasswordField1.getPassword()) + "' AND `users`.`us_username` = '" + jTextField1.getText() + "';");
+                    ResultSet result = MySQL.execute("SELECT * FROM `users` INNER JOIN `branch` ON `users`.`us_branch` = `branch`.`b_id` WHERE `users`.`us_password` = '" + String.valueOf(jPasswordField1.getPassword()) + "' AND `users`.`us_username` = '" + jTextField1.getText() + "';");
 
                     if (result.next()) {
 
@@ -266,6 +266,8 @@ public class Login extends javax.swing.JFrame {
                             preferences.put("last_name", result.getString("us_lname"));
                             preferences.put("email", result.getString("us_email"));
                             preferences.put("mobile", result.getString("us_mobile"));
+                            preferences.put("branch", result.getString("b_name"));
+                            preferences.put("branch_id", result.getString("b_id"));
 
                             if (result.getInt("us_status") == 1) {
 

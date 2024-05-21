@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.Date;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
@@ -24,9 +25,27 @@ import model.MySQL;
  */
 public class CashierDashbord extends javax.swing.JFrame {
 
+    Preferences preferences = Preferences.userRoot();
+
     /**
      * Creates new form CashierDashbord
      */
+    private final void LodeinProduct() {
+
+        try {
+
+            ResultSet result = MySQL.execute("SELECT * FROM `product` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock`");
+
+            if (result.next()) {
+
+            }
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
     private void startClock() {
         Thread clockThread = new Thread(() -> {
             while (true) {
@@ -44,7 +63,12 @@ public class CashierDashbord extends javax.swing.JFrame {
     public CashierDashbord() {
         initComponents();
         jLabel38.setText(new SimpleDateFormat("dd MMMM yyyy").format(new Date()));
+        jLabel42.setText(preferences.get("username", "default_value"));
+        jLabel43.setText(preferences.get("first_name", "default_value") + " " + preferences.get("last_name", "default_value"));
+        jLabel50.setText(preferences.get("branch", "default_value"));
+        
         startClock();
+        LodeinProduct();
     }
 
     /**
@@ -1224,7 +1248,8 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton29ActionPerformed
 
     private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
-
+        this.dispose();
+        new Login().setVisible(true);
     }//GEN-LAST:event_jButton25ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
