@@ -13,10 +13,12 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.Date;
+import java.util.Vector;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JLabel;
+import javax.swing.table.DefaultTableModel;
 import model.MySQL;
 
 /**
@@ -30,20 +32,57 @@ public class CashierDashbord extends javax.swing.JFrame {
     /**
      * Creates new form CashierDashbord
      */
-    private final void LodeinProduct() {
+    private final void LodeingProduct() {
+
+        String q = "SELECT * FROM `product` INNER JOIN `barnd`  ON `product`.`p_barnd` = `barnd`.`br_id` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock` WHERE `product`.`p_status` = '1'";
+
+        if (!jTextField1.getText().isBlank()) {
+            q += "AND `product`.`p_id` LIKE '" + jTextField1.getText() + "%'";
+        }
+
+        if (!jTextField2.getText().isBlank()) {
+            q += "AND `product`.`p_name` LIKE '" + jTextField2.getText() + "%'";
+        }
 
         try {
 
-            ResultSet result = MySQL.execute("SELECT * FROM `product` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock`");
+            ResultSet resultSet = MySQL.execute(q);
 
-            if (result.next()) {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+            model.setRowCount(0);
+
+            while (resultSet.next()) {
+
+                Vector<String> vector = new Vector<>();
+
+                vector.add(resultSet.getString("p_id"));
+                vector.add(resultSet.getString("sto_id"));
+                vector.add(resultSet.getString("p_name"));
+                vector.add(resultSet.getString("br_name"));
+                vector.add(resultSet.getString("sto_selling_price"));
+                vector.add(resultSet.getString("stq_qty"));
+                vector.add(resultSet.getString("sto_exp"));
+                vector.add(resultSet.getString("sto_mfg"));
+
+                model.addRow(vector);
 
             }
 
-        } catch (Exception e) {
+            jTable1.setModel(model);
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+    }
+    
+    public final void SetItem(){
+    
+    
+        
+    
+    
     }
 
     private void startClock() {
@@ -66,9 +105,9 @@ public class CashierDashbord extends javax.swing.JFrame {
         jLabel42.setText(preferences.get("username", "default_value"));
         jLabel43.setText(preferences.get("first_name", "default_value") + " " + preferences.get("last_name", "default_value"));
         jLabel50.setText(preferences.get("branch", "default_value"));
-        
+
         startClock();
-        LodeinProduct();
+        LodeingProduct();
     }
 
     /**
@@ -557,6 +596,31 @@ public class CashierDashbord extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel7.setText("to");
+
+        jTextField1.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                jTextField1InputMethodTextChanged(evt);
+            }
+        });
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField1KeyTyped(evt);
+            }
+        });
+
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField2KeyReleased(evt);
+            }
+        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filter", "Item 2", "Item 3", "Item 4" }));
 
@@ -1275,6 +1339,26 @@ public class CashierDashbord extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
+
+    }//GEN-LAST:event_jTextField1KeyTyped
+
+    private void jTextField1InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextField1InputMethodTextChanged
+
+    }//GEN-LAST:event_jTextField1InputMethodTextChanged
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+
+    }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        LodeingProduct();
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
+        LodeingProduct();
+    }//GEN-LAST:event_jTextField2KeyReleased
 
     /**
      * @param args the command line arguments
