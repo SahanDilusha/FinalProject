@@ -525,18 +525,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
         jTextField1.setEditable(false);
         jButton1.setEnabled(false);
 
-        try {
-
-            ResultSet resultSet = MySQL.execute("SELECT ");
-
-            if (resultSet.next()) {
-                String count = resultSet.getString(1);
-                jLabel7.setText(count);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
         
     }//GEN-LAST:event_jTable1MouseClicked
 
