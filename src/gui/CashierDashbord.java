@@ -143,14 +143,15 @@ public class CashierDashbord extends javax.swing.JFrame {
         jLabel10.setText("");
         jTextField8.setText("0.00");
         jFormattedTextField3.setText("0");
+        jTable1.clearSelection();
     }
 
     private final void SearchReset() {
 
         jTextField1.setText("");
         jTextField2.setText("");
-        jFormattedTextField4.setText("");
-        jFormattedTextField5.setText("");
+        jFormattedTextField4.setText("0.00");
+        jFormattedTextField5.setText("0.00");
         jComboBox1.setSelectedIndex(0);
         LodeingProduct();
 
@@ -1173,7 +1174,6 @@ public class CashierDashbord extends javax.swing.JFrame {
         jTextField6.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextField6.setText("0.00");
 
-        jFormattedTextField1.setEditable(false);
         jFormattedTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jFormattedTextField1.setText("0.00");
         jFormattedTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
