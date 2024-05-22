@@ -69,6 +69,20 @@ public class CashierDashbord extends javax.swing.JFrame {
             q += " AND `stock`.`sto_selling_price` >= '" + min + "' AND `stock`.`sto_selling_price` <= '" + max + "'";
         }
 
+        q += "ORDER BY ";
+
+        String getGroup = String.valueOf(jComboBox1.getSelectedItem());
+
+        if (getGroup.equals("Date of Expier Descending")) {
+            q += " `stock`.`sto_exp` DESC";
+        } else if (getGroup.equals("Date of Expier Ascending")) {
+            q += " `stock`.`sto_exp` ASC";
+        } else if (getGroup.equals("Price Ascending")) {
+            q += " `stock`.`sto_selling_price` ASC";
+        } else if (getGroup.equals("Price Descending")) {
+            q += " `stock`.`sto_selling_price` DESC";
+        }
+
         try {
 
             ResultSet resultSet = MySQL.execute(q);
@@ -137,6 +151,7 @@ public class CashierDashbord extends javax.swing.JFrame {
         jTextField2.setText("");
         jFormattedTextField4.setText("");
         jFormattedTextField5.setText("");
+        jComboBox1.setSelectedIndex(0);
         LodeingProduct();
 
     }
@@ -733,7 +748,12 @@ public class CashierDashbord extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Date of Expier Ascending", "Date of Expier Descending", "Price Ascending", "Price Descending" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Date of Expier Descending", "Date of Expier Ascending", "Price Ascending", "Price Descending" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
 
         jButton1.setText("Search");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -1542,6 +1562,10 @@ public class CashierDashbord extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         LodeingProduct();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        LodeingProduct();
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
 
     /**
      * @param args the command line arguments

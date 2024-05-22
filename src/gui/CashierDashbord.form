@@ -789,13 +789,16 @@
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="4">
-                    <StringItem index="0" value="Date of Expier Ascending"/>
-                    <StringItem index="1" value="Date of Expier Descending"/>
+                    <StringItem index="0" value="Date of Expier Descending"/>
+                    <StringItem index="1" value="Date of Expier Ascending"/>
                     <StringItem index="2" value="Price Ascending"/>
                     <StringItem index="3" value="Price Descending"/>
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jComboBox1ItemStateChanged"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
