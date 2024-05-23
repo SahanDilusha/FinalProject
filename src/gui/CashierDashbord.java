@@ -9,6 +9,8 @@ import static java.awt.Frame.MAXIMIZED_BOTH;
 import javax.swing.JFrame;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -20,6 +22,7 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -32,13 +35,13 @@ import model.MySQL;
  * @author chamu
  */
 public class CashierDashbord extends javax.swing.JFrame {
-
+    
     Preferences preferences = Preferences.userRoot();
-
+    
     HashMap<String, InvoiceItem> invoiceItemMap = new HashMap<>();
     HashMap<String, InvoiceItem> stockMap = new HashMap<>();
     HashMap<String, String> methodMap = new HashMap<>();
-
+    
     private double total;
     private double discount;
     private double payment;
@@ -46,48 +49,48 @@ public class CashierDashbord extends javax.swing.JFrame {
     private double balance;
     private String paymentmethod = "Select";
     private double newpoint;
-
+    
     private CustomerData cu;
-
+    
     public final void setCustomerData(CustomerData c) {
-
+        
         cu = c;
-
+        
         jLabel25.setText(c.getFname() + " " + c.getLname());
         jLabel27.setText(c.getMobile());
         jLabel29.setText(String.valueOf(c.getPoint()));
-
+        
     }
 
     /**
      * Creates new form CashierDashbord
      */
     private final void cal() {
-
+        
         paymentmethod = String.valueOf(jComboBox2.getSelectedItem());
-
+        
         if (jCheckBox1.isSelected()) {
             withdrwpoint = true;
         } else {
             withdrwpoint = false;
         }
-
+        
         total = Double.parseDouble(jTextField10.getText());
-
+        
         if (jFormattedTextField1.getText().isBlank()) {
             discount = 0;
         } else {
             discount = Double.parseDouble(jFormattedTextField1.getText());
         }
-
+        
         if (jFormattedTextField2.getText().isBlank()) {
             payment = 0;
         } else {
             payment = Double.parseDouble(jFormattedTextField2.getText());
         }
-
+        
         total -= discount;
-
+        
         if (total < 0) {
             jFormattedTextField1.setText("0.00");
         } else {
@@ -102,7 +105,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                 total = 0;
             }
         }
-
+        
         if (paymentmethod.equals("Cash")) {
             balance = payment - total;
         } else {
@@ -110,35 +113,35 @@ public class CashierDashbord extends javax.swing.JFrame {
             balance = 0;
             jFormattedTextField2.setText(String.valueOf(total));
         }
-
+        
         jTextField6.setText(String.valueOf(balance));
         jTextField11.setText(String.valueOf(total));
-
+        
     }
-
+    
     private final void LodeingProduct() {
-
+        
         String q = "SELECT * FROM `product` INNER JOIN `barnd`  ON `product`.`p_barnd` = `barnd`.`br_id` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock` WHERE `product`.`p_status` = '1'";
-
+        
         if (!jTextField1.getText().isBlank()) {
             q += " AND `product`.`p_id` LIKE '" + jTextField1.getText() + "%'";
         }
-
+        
         if (!jTextField2.getText().isBlank()) {
             q += " AND `product`.`p_name` LIKE '" + jTextField2.getText() + "%'";
         }
-
+        
         double max = 0;
         double min = 0;
-
+        
         if (!jFormattedTextField4.getText().isBlank()) {
             min = Double.parseDouble(jFormattedTextField4.getText());
         }
-
+        
         if (!jFormattedTextField5.getText().isBlank()) {
             max = Double.parseDouble(jFormattedTextField5.getText());
         }
-
+        
         if (min > 0 && max == 0) {
             q += " AND `stock`.`sto_selling_price` >= '" + min + "'";
         } else if (max > 0 && min == 0) {
@@ -146,11 +149,11 @@ public class CashierDashbord extends javax.swing.JFrame {
         } else if (min > 0 && max > 0) {
             q += " AND `stock`.`sto_selling_price` >= '" + min + "' AND `stock`.`sto_selling_price` <= '" + max + "'";
         }
-
+        
         q += "ORDER BY ";
-
+        
         String getGroup = String.valueOf(jComboBox1.getSelectedItem());
-
+        
         if (getGroup.equals("Date of Expier Descending")) {
             q += " `stock`.`sto_exp` DESC";
         } else if (getGroup.equals("Date of Expier Ascending")) {
@@ -160,19 +163,19 @@ public class CashierDashbord extends javax.swing.JFrame {
         } else if (getGroup.equals("Price Descending")) {
             q += " `stock`.`sto_selling_price` DESC";
         }
-
+        
         try {
-
+            
             ResultSet resultSet = MySQL.execute(q);
-
+            
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-
+            
             model.setRowCount(0);
-
+            
             while (resultSet.next()) {
-
+                
                 Vector<String> vector = new Vector<>();
-
+                
                 vector.add(resultSet.getString("p_id"));
                 vector.add(resultSet.getString("sto_id"));
                 vector.add(resultSet.getString("p_name"));
@@ -181,9 +184,9 @@ public class CashierDashbord extends javax.swing.JFrame {
                 vector.add(resultSet.getString("stq_qty"));
                 vector.add(resultSet.getString("sto_mfg"));
                 vector.add(resultSet.getString("sto_exp"));
-
+                
                 InvoiceItem item = new InvoiceItem();
-
+                
                 item.setProductId(resultSet.getString("p_id"));
                 item.setStockId(resultSet.getString("sto_id"));
                 item.setProductName(resultSet.getString("p_name"));
@@ -192,77 +195,90 @@ public class CashierDashbord extends javax.swing.JFrame {
                 item.setQty(Double.parseDouble(resultSet.getString("stq_qty")));
                 item.setMfg(resultSet.getDate("sto_mfg"));
                 item.setExp(resultSet.getDate("sto_exp"));
-
+                item.setImage(resultSet.getBytes("p_img"));
+                
                 stockMap.put(resultSet.getString("sto_id"), item);
-
+                
                 model.addRow(vector);
-
+                
             }
-
+            
             jTable1.setModel(model);
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
     }
-
+    
     public final void SetItem() {
-
+        
         int row = jTable1.getSelectedRow();
-
+        
         jLabel10.setText(String.valueOf(jTable1.getValueAt(row, 2)));
         jTextField8.setText(String.valueOf(jTable1.getValueAt(row, 4)));
+        jLabel19.setText(String.valueOf(jTable1.getValueAt(row, 2)));
+        jLabel20.setText(String.valueOf(jTable1.getValueAt(row, 4)));
+        jLabel22.setText(String.valueOf(jTable1.getValueAt(row, 3)));
         jFormattedTextField3.setText("1");
         jFormattedTextField3.grabFocus();
+        
+        InvoiceItem product = stockMap.get(String.valueOf(jTable1.getValueAt(row, 1)));
+        
+        jLabel14.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(product.getImage())));
+        
     }
-
+    
     private final void SetItemReset() {
         jLabel10.setText("");
         jTextField8.setText("0.0");
+        jLabel19.setText("");
+        jLabel20.setText("");
+        jLabel22.setText("");
+        jLabel14.setIcon(null);
         jFormattedTextField3.setText("0");
         jTable1.clearSelection();
     }
-
+    
     private final void SearchReset() {
-
+        
         jTextField1.setText("");
         jTextField2.setText("");
         jFormattedTextField4.setText("0.0");
         jFormattedTextField5.setText("0.00");
         jComboBox1.setSelectedIndex(0);
         LodeingProduct();
-
+        
     }
-
+    
     private void lodePyemantMethod() {
-
+        
         try {
             ResultSet result = MySQL.execute("SELECT * FROM `payment_method`");
-
+            
             Vector vector = new Vector();
-
+            
             while (result.next()) {
                 vector.add(result.getString("pa_name"));
                 methodMap.put(result.getString("pa_name"), result.getString("pa_id"));
             }
-
+            
             jComboBox2.setModel(new DefaultComboBoxModel(vector));
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
     }
-
+    
     public final void SetInvoiceItem() {
-
+        
         int row = jTable1.getSelectedRow();
-
+        
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "pleas select item", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
         } else {
-
+            
             if (jFormattedTextField3.getText().isBlank()) {
                 JOptionPane.showMessageDialog(this, "pleas select enter qty", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
             } else if (Double.parseDouble(jFormattedTextField3.getText()) <= 0) {
@@ -270,11 +286,11 @@ public class CashierDashbord extends javax.swing.JFrame {
             } else if (Double.parseDouble(jFormattedTextField3.getText()) > Double.parseDouble(String.valueOf(jTable1.getValueAt(row, 5)))) {
                 JOptionPane.showMessageDialog(this, "pleas check qty!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
             } else {
-
+                
                 InvoiceItem stock = stockMap.get(String.valueOf(jTable1.getValueAt(row, 1)));
-
+                
                 InvoiceItem item = new InvoiceItem();
-
+                
                 item.setStockId(stock.getStockId());
                 item.setProductId(stock.getProductId());
                 item.setProductName(stock.getProductName());
@@ -284,26 +300,26 @@ public class CashierDashbord extends javax.swing.JFrame {
                 item.setMfg(stock.getMfg());
                 item.setExp(stock.getExp());
                 item.setTotal(stock.getSellingPrice() * Double.valueOf(jFormattedTextField3.getText()));
-
+                
                 invoiceItemMap.put(String.valueOf(jTable1.getValueAt(row, 1)), item);
-
+                
                 lodeInvoiceItems();
             }
-
+            
         }
-
+        
     }
-
+    
     private void lodeInvoiceItems() {
-
+        
         DefaultTableModel modle = (DefaultTableModel) jTable2.getModel();
         modle.setRowCount(0);
         total = 0;
-
+        
         for (InvoiceItem object : invoiceItemMap.values()) {
-
+            
             Vector<String> vector = new Vector<>();
-
+            
             vector.add(object.getProductId());
             vector.add(object.getStockId());
             vector.add(object.getProductName());
@@ -313,20 +329,20 @@ public class CashierDashbord extends javax.swing.JFrame {
             vector.add(String.valueOf(object.getExp()));
             vector.add(String.valueOf(object.getQty()));
             vector.add(String.valueOf(object.getTotal()));
-
+            
             modle.addRow(vector);
-
+            
             total += object.getTotal();
-
+            
         }
-
+        
         jTextField10.setText(String.valueOf(total));
-
+        
         jTable2.setModel(modle);
         cal();
-
+        
     }
-
+    
     private void startClock() {
         Thread clockThread = new Thread(() -> {
             while (true) {
@@ -340,14 +356,14 @@ public class CashierDashbord extends javax.swing.JFrame {
         });
         clockThread.start();
     }
-
+    
     public CashierDashbord() {
         initComponents();
         jLabel38.setText(new SimpleDateFormat("dd MMMM yyyy").format(new Date()));
         jLabel42.setText(preferences.get("username", "default_value"));
         jLabel43.setText(preferences.get("first_name", "default_value") + " " + preferences.get("last_name", "default_value"));
         jLabel50.setText(preferences.get("branch", "default_value"));
-
+        
         startClock();
         LodeingProduct();
         lodePyemantMethod();
@@ -1687,22 +1703,22 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-
+        
         if (evt.getClickCount() == 2) {
-
+            
             int row = jTable2.getSelectedRow();
-
+            
             if (row != -1) {
-
+                
                 int option = JOptionPane.showConfirmDialog(this, "Remove this item?", "WARNING", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-
+                
                 if (option == JOptionPane.YES_OPTION) {
                     invoiceItemMap.remove(String.valueOf(jTable2.getValueAt(row, 1)));
                     lodeInvoiceItems();
                 }
-
+                
             }
-
+            
         }
 
     }//GEN-LAST:event_jTable2MouseClicked
@@ -1729,15 +1745,15 @@ public class CashierDashbord extends javax.swing.JFrame {
         } else {
             jFormattedTextField2.setEditable(true);
         }
-
+        
         jFormattedTextField1.setText("0.00");
         jFormattedTextField2.setText("0.00");
-
+        
         cal();
     }//GEN-LAST:event_jComboBox2ItemStateChanged
 
     private void jFormattedTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField2KeyReleased
-
+        
         if (jFormattedTextField2.getText().matches("^\\d+$")) {
             cal();
             jLabel6.setText("");
@@ -1748,7 +1764,7 @@ public class CashierDashbord extends javax.swing.JFrame {
             jButton30.setEnabled(false);
             jTextField11.setText(jTextField10.getText());
         }
-
+        
 
     }//GEN-LAST:event_jFormattedTextField2KeyReleased
 
@@ -1781,9 +1797,9 @@ public class CashierDashbord extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
+        
         FlatLightLaf.setup();
-
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 CashierDashbord home = new CashierDashbord();
@@ -1791,7 +1807,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                 home.setVisible(true);
             }
         });
-
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

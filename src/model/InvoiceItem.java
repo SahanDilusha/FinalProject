@@ -21,9 +21,10 @@ public class InvoiceItem {
     private Date mfg;
     private Date exp;
     private double total;
-    
-    public InvoiceItem(){
-    
+    private byte[] image;
+
+    public InvoiceItem() {
+
     }
 
     public String getStockId() {
@@ -96,6 +97,14 @@ public class InvoiceItem {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
 }

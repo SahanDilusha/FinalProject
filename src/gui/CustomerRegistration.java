@@ -674,6 +674,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
                 cashier.setCustomerData(cas);
 
+                this.dispose();
+
             } else {
 
                 try {
