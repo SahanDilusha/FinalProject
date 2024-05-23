@@ -15,19 +15,21 @@ import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import model.MySQL;
 import model.SendEmail;
+import java.util.logging.*;
 
 /**
  *
  * @author sahan
  */
 public class Login extends javax.swing.JFrame {
-
+    
     private int at = 0;
     private boolean st = true;
     private String email;
     private String name;
     private int tp;
-
+    
+    
     /**
      * Creates new form Login
      */
@@ -38,36 +40,36 @@ public class Login extends javax.swing.JFrame {
 
         // Format the OTP as a string
         String otpString = String.valueOf(otp);
-
+        
         return otpString;
     }
-
+    
     private final void ShowOTPPanal() {
         main.removeAll();
         main.add(jPanel3);
         main.repaint();
         main.revalidate();
     }
-
+    
     private final void ShowCashierDashbord() {
         SendLoginMail(name, email);
         this.dispose();
         CashierDashbord ca = new CashierDashbord();
         ca.setVisible(true);
         ca.setExtendedState(MAXIMIZED_BOTH);
-
+        
     }
-
+    
     private final void ShowManagerDashboard() {
         SendLoginMail(name, email);
         this.dispose();
         ManagerDashboard ma = new ManagerDashboard();
         ma.setVisible(true);
-
+        
     }
-
+    
     private final String SendLoginMail(String name, String email) {
-
+        
         return SendEmail.send(email, "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -142,9 +144,9 @@ public class Login extends javax.swing.JFrame {
                 + "</body>\n"
                 + "</html>", "Login Notification");
     }
-
+    
     private final String SendOtpMail(String email, String otp) {
-
+        
         return SendEmail.send(email, "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -222,9 +224,9 @@ public class Login extends javax.swing.JFrame {
                 + "    </div>\n"
                 + "</body>\n"
                 + "</html>", "Login OTP");
-
+        
     }
-
+    
     public Login() {
         initComponents();
         jLabel9.setText("codely-group©" + Year.now().toString());
@@ -510,9 +512,9 @@ public class Login extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
-
+            
             jPasswordField1.setEchoChar((char) 0);
-
+            
         } else {
             jPasswordField1.setEchoChar('\u25cf');
         }
@@ -523,7 +525,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
+        
         if (jTextField1.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "please enter your username!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
         } else if (String.valueOf(jPasswordField1.getPassword()).isBlank()) {
@@ -531,22 +533,22 @@ public class Login extends javax.swing.JFrame {
         } else if (!String.valueOf(jPasswordField1.getPassword()).matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")) {
             JOptionPane.showMessageDialog(this, "invalid password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
         } else {
-
+            
             try {
-
+                
                 if (at != 3) {
-
+                    
                     ResultSet result = MySQL.execute("SELECT * FROM `users` INNER JOIN `branch` ON `users`.`us_branch` = `branch`.`b_id` WHERE `users`.`us_password` = '" + String.valueOf(jPasswordField1.getPassword()) + "' AND `users`.`us_username` = '" + jTextField1.getText() + "';");
-
+                    
                     if (result.next()) {
-
+                        
                         if (result.getInt("us_status") != 1) {
                             at += 1;
                             JOptionPane.showMessageDialog(this, "Your account is currently disabled!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
                         } else {
-
+                            
                             Preferences preferences = Preferences.userRoot();
-
+                            
                             preferences.put("id", result.getString("us_id"));
                             preferences.put("username", result.getString("us_username"));
                             preferences.put("first_name", result.getString("us_fname"));
@@ -555,27 +557,27 @@ public class Login extends javax.swing.JFrame {
                             preferences.put("mobile", result.getString("us_mobile"));
                             preferences.put("branch", result.getString("b_name"));
                             preferences.put("branch_id", result.getString("b_id"));
-
+                            
                             email = result.getString("us_email");
                             name = result.getString("us_fname") + " " + result.getString("us_lname");
-
+                            
                             if (result.getString("us_two_facter").equals("1")) {
                                 st = false;
                             } else {
                                 st = true;
                             }
-
+                            
                             if (result.getInt("us_type") == 1) {
-
+                                
                                 if (st == true) {
                                     ShowCashierDashbord();
-
+                                    
                                 } else {
                                     tp = result.getInt("us_type");
                                     ShowOTPPanal();
                                     SendOtpMail(result.getString("us_email"), result.getString("us_otp"));
                                 }
-
+                                
                             } else if (result.getInt("us_type") == 2) {
                                 if (st == true) {
                                     ShowManagerDashboard();
@@ -589,28 +591,28 @@ public class Login extends javax.swing.JFrame {
                                 JOptionPane.showMessageDialog(this, "invalid username or password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
                             }
                         }
-
+                        
                     } else {
                         at += 1;
                         JOptionPane.showMessageDialog(this, "invalid username or password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
                     }
-
+                    
                 } else {
-
+                    
                     JOptionPane.showMessageDialog(this, "attempt are over!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-
+                    
                     ResultSet result = MySQL.execute("SELECT * FROM `users` WHERE `users`.`us_username` = '" + jTextField1.getText() + "' AND `users`.`us_status`='1'");
-
+                    
                     if (result.next()) {
                         MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_username` = '" + jTextField1.getText() + "';");
                     }
-
+                    
                 }
-
+                
             } catch (Exception e) {
-                System.out.println(e);
+              
             }
-
+            
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -619,28 +621,28 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
+        
         if (jTextField2.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "please enter OTP code!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
-
+            
             try {
                 ResultSet result = MySQL.execute("SELECT `us_type` FROM `users` WHERE  `users`.`us_username` = '" + jTextField1.getText() + "' AND `users`.`us_otp` = '" + jTextField2.getText() + "';");
-
+                
                 if (result.next()) {
-
+                    
                     MySQL.execute("UPDATE `users` SET `users`.`us_otp` = '" + generateOTP() + "' WHERE `users`.`us_username` = '" + jTextField1.getText() + "';");
-
+                    
                     if (result.getInt("us_type") == 1) {
                         ShowCashierDashbord();
                     } else if (result.getInt("us_type") == 2) {
                         ShowManagerDashboard();
                     }
-
+                    
                 } else {
                     JOptionPane.showMessageDialog(this, "please check your OTP code!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
                 }
-
+                
             } catch (Exception e) {
             }
         }
@@ -648,15 +650,15 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String otp = generateOTP();
-
+        
         try {
-
+            
             MySQL.execute("UPDATE `users` SET `users`.`us_otp` = '" + otp + "' WHERE `users`.`us_username` = '" + jTextField1.getText() + "';");
             SendOtpMail(email, otp);
             JOptionPane.showMessageDialog(this, "OTP Code is send!", "MESSAGE", JOptionPane.INFORMATION_MESSAGE);
-
+            
         } catch (Exception e) {
-
+            
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -664,9 +666,9 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
+        
         FlatLightLaf.setup();
-
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
