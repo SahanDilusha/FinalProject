@@ -1790,7 +1790,9 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton31ActionPerformed
 
     private void jButton30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton30ActionPerformed
-        // TODO add your handling code here:
+       
+        
+        
     }//GEN-LAST:event_jButton30ActionPerformed
 
     /**
