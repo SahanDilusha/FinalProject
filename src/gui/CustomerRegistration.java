@@ -11,6 +11,9 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.CustomerData;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import model.MySQL;
 
 /**
@@ -23,6 +26,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
      * Creates new form CustomerRegistration
      */
     HashMap<String, CustomerData> customerMap = new HashMap<>();
+
+    private final CashierDashbord cashier;
 
     private final void DatabaseGetCustomer(String order, String col, String text) {
 
@@ -44,6 +49,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
             model.setRowCount(0);
 
             while (resultset.next()) {
+
                 Vector<String> vector = new Vector<>();
                 CustomerData data = new CustomerData();
 
@@ -66,6 +72,13 @@ public class CustomerRegistration extends javax.swing.JDialog {
             }
 
             jTable1.setModel(model);
+            jTable1.repaint();
+
+            if (jTable1.getRowCount() == 0) {
+                jToggleButton1.setEnabled(true);
+            } else {
+                jToggleButton1.setEnabled(false);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,15 +113,17 @@ public class CustomerRegistration extends javax.swing.JDialog {
         jToggleButton1.setEnabled(true);
         jToggleButton2.setEnabled(false);
         jToggleButton3.setEnabled(false);
+        jTextField1.setEditable(true);
 
     }
 
     public CustomerRegistration(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        DatabaseGetCustomer("ASC", "cu_fname", "");
+        cashier = (CashierDashbord) parent;
         jToggleButton3.setEnabled(false);
         jToggleButton2.setEnabled(false);
+        DatabaseGetCustomer("ASC", "cu_fname", "");
     }
 
     /**
@@ -473,6 +488,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
         String firstName = jTextField2.getText();
         String lastName = jTextField3.getText();
         String email = jTextField4.getText();
+        boolean check = true;
 
         if (mobile.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Customer Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -482,12 +498,63 @@ public class CustomerRegistration extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Please Enter Customer First Name", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (lastName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Customer Last Email", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (email.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Customer Email", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@"
-                + "[^-][A-Za-z0-9\\+-]+(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
-            JOptionPane.showMessageDialog(this, "Invalid Customer Email", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
+
+            if (!email.isBlank()) {
+
+                if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@"
+                        + "[^-][A-Za-z0-9\\+-]+(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
+                    check = false;
+
+                    JOptionPane.showMessageDialog(this, "Invalid Customer Email", "Warning", JOptionPane.WARNING_MESSAGE);
+                } else {
+
+                    try {
+                        ResultSet resultset = MySQL.execute("SELECT `customers`.`cu_email` FROM `customers` WHERE `customers`.`cu_email` = '" + email + "'");
+
+                        if (resultset.next()) {
+                            check = false;
+
+                            JOptionPane.showMessageDialog(this, "This email is already used!", "Warning", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            check = true;
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            if (check) {
+
+                try {
+                    MySQL.execute("INSERT INTO `customers`("
+                            + "`cu_mobile`,"
+                            + "`cu_fname`,"
+                            + "`cu_lname`,"
+                            + "`cu_email`,"
+                            + "`cu_r_date`,"
+                            + "`cu_point`,"
+                            + "`cu_users`) "
+                            + "VALUES("
+                            + "'" + mobile + "',"
+                            + "'" + firstName + "',"
+                            + "'" + lastName + "',"
+                            + "'" + email + "',"
+                            + "'" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "',"
+                            + "'" + 0 + "',"
+                            + "'" + 1 + "');");
+
+                    Reset();
+                    DatabaseGetCustomer("ASC", "cu_fname", "");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
 
         }
 
@@ -495,30 +562,92 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
 
-        String mobile = jTextField1.getText();
         String firstName = jTextField2.getText();
         String lastName = jTextField3.getText();
         String email = jTextField4.getText();
+        boolean check = true;
 
         if (firstName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Customer First Name", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (lastName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Customer Last Name", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (email.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Customer Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@"
-                + "[^-][A-Za-z0-9\\+-]+(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
-            JOptionPane.showMessageDialog(this, "Invalid Customer Email", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
 
-            try {
+            CustomerData customer = customerMap.get(jTextField1.getText());
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (customer != null) {
+
+                System.out.println(customer.getMobile());
+
+                if (firstName.equals(customer.getFname()) && lastName.equals(customer.getLname()) && email.equals(customer.getEmail())) {
+
+                    JOptionPane.showMessageDialog(this, "Same data entry!", "Warning", JOptionPane.WARNING_MESSAGE);
+                } else {
+
+                    if (!email.isBlank()) {
+
+                        if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@"
+                                + "[^-][A-Za-z0-9\\+-]+(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
+                            check = false;
+
+                            JOptionPane.showMessageDialog(this, "Invalid Customer Email", "Warning", JOptionPane.WARNING_MESSAGE);
+                        } else {
+
+                            try {
+                                ResultSet resultset = MySQL.execute("SELECT `customers`.`cu_email` FROM `customers` WHERE `customers`.`cu_email` = '" + email + "'");
+
+                                if (resultset.next()) {
+                                    check = false;
+
+                                    JOptionPane.showMessageDialog(this, "This email is already used!", "Warning", JOptionPane.WARNING_MESSAGE);
+                                } else {
+                                    check = true;
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+
+                    if (check) {
+
+                        String q = "UPDATE `customers` SET ";
+
+                        if (!firstName.equals(customer.getFname())) {
+                            q += "`cu_fname` = '" + firstName + "',";
+                        }
+
+                        if (!lastName.equals(customer.getLname())) {
+                            q += "`cu_lname` = '" + lastName + "',";
+                        }
+
+                        if (!email.equals(customer.getEmail())) {
+                            q += "`cu_email` = '" + email + "',";
+                        }
+
+                        q += " WHERE `cu_mobile` = '" + jTextField1.getText() + "'";
+
+                        q = q.replace(", WHERE", " WHERE");
+
+                        try {
+
+                            MySQL.execute(q);
+                            Reset();
+                            DatabaseGetCustomer("ASC", "cu_fname", "");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Customer not found!", "Error", JOptionPane.ERROR_MESSAGE);
             }
-
         }
-
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -529,13 +658,23 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
 
-        if (evt.getClickCount() == 2) {
+        int row = jTable1.getSelectedRow();
 
-        } else {
+        if (row != -1) {
 
-            int row = jTable1.getSelectedRow();
+            if (evt.getClickCount() == 2) {
 
-            if (row != -1) {
+                CustomerData cas = new CustomerData();
+
+                cas.setMobile(String.valueOf(jTable1.getValueAt(row, 0)));
+                cas.setFname(String.valueOf(jTable1.getValueAt(row, 1)));
+                cas.setLname(String.valueOf(jTable1.getValueAt(row, 2)));
+                cas.setEmail(String.valueOf(jTable1.getValueAt(row, 3)));
+                cas.setPoint(Integer.parseInt(String.valueOf(jTable1.getValueAt(row, 4))));
+
+                cashier.setCustomerData(cas);
+
+            } else {
 
                 try {
                     ResultSet resultset = MySQL.execute("SELECT COUNT(`invoice`.`in_no`) AS `count` FROM `invoice` WHERE `invoice`.`in_users` = '" + String.valueOf(jTable1.getValueAt(row, 0)) + "';");
@@ -550,13 +689,14 @@ public class CustomerRegistration extends javax.swing.JDialog {
                 jToggleButton1.setEnabled(false);
                 jToggleButton2.setEnabled(true);
                 jToggleButton3.setEnabled(true);
+                jTextField1.setEditable(false);
                 jTextField1.setText(String.valueOf(jTable1.getValueAt(row, 0)));
                 jTextField2.setText(String.valueOf(jTable1.getValueAt(row, 1)));
                 jTextField3.setText(String.valueOf(jTable1.getValueAt(row, 2)));
                 jTextField4.setText(String.valueOf(jTable1.getValueAt(row, 3)));
                 jLabel9.setText(String.valueOf(jTable1.getValueAt(row, 4)));
-            }
 
+            }
         }
 
     }//GEN-LAST:event_jTable1MouseClicked
