@@ -16,7 +16,7 @@ public class MySQL {
 //    private static final String username = "root";
 //    private static final String password = "Sahan@200212010";
 //    private static final String database = "final_project";
-    
+
     static {
 
         try {
