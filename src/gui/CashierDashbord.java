@@ -33,6 +33,7 @@ import javax.swing.table.DefaultTableModel;
 import model.CustomerData;
 import model.InvoiceItem;
 import model.MySQL;
+import model.SendEmail;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
@@ -77,11 +78,11 @@ public class CashierDashbord extends javax.swing.JFrame {
     }
 
     private final void LodingInvoice() {
-        
+
         String q = "SELECT * FROM `invoice` WHERE DATE(`in_date`) = '2024-05-24' AND `in_users` = '" + preferences.get("id", "default_value") + "'";
-        
+
         if (!jTextField3.getText().isBlank()) {
-            q +=" AND `in_no` LIKE '"+jTextField3.getText()+"%'";
+            q += " AND `in_no` LIKE '" + jTextField3.getText() + "%'";
         }
 
         try {
@@ -942,6 +943,11 @@ public class CashierDashbord extends javax.swing.JFrame {
         jButton35.setForeground(new java.awt.Color(255, 255, 255));
         jButton35.setText("Manager Login");
         jButton35.setBorder(null);
+        jButton35.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton35ActionPerformed(evt);
+            }
+        });
         jPanel5.add(jButton35);
 
         jButton36.setBackground(new java.awt.Color(0, 0, 51));
@@ -1681,8 +1687,8 @@ public class CashierDashbord extends javax.swing.JFrame {
         } else if (jLabel25.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "Please select customer!", "WARNING", JOptionPane.WARNING_MESSAGE);
         } else {
-            
-            
+
+            String item = "";
 
             try {
 
@@ -1707,7 +1713,19 @@ public class CashierDashbord extends javax.swing.JFrame {
                         + "'" + preferences.get("id", "default_value") + "',"
                         + "'" + methodMap.get(String.valueOf(jComboBox2.getSelectedItem())) + "');");
 
+                int no = 0;
+
                 for (InvoiceItem entry : invoiceItemMap.values()) {
+
+                    no++;
+
+                    item += "<tr>\n"
+                            + "<td>" + String.valueOf(no) + "</td>\n"
+                            + "<td>" + entry.getProductName() + "</td>\n"
+                            + "<td>" + entry.getQty() + "</td>\n"
+                            + "<td>" + entry.getSellingPrice() + "</td>\n"
+                            + "<td>" + entry.getTotal() + "</td>\n"
+                            + "</tr>";
 
                     MySQL.execute("INSERT INTO `invoice_items`("
                             + "`it_stock`,"
@@ -1738,6 +1756,170 @@ public class CashierDashbord extends javax.swing.JFrame {
 
                 JasperViewer.viewReport(jasperPrint, false);
 
+                if (!cu.getEmail().isBlank() || cu.getEmail() != null) {
+
+                    String body = "<!DOCTYPE html>\n"
+                            + "<html lang=\"en\">\n"
+                            + "\n"
+                            + "<head>\n"
+                            + "    <meta charset=\"UTF-8\">\n"
+                            + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                            + "    <title>Invoice</title>\n"
+                            + "    <style>\n"
+                            + "        body {\n"
+                            + "            font-family: Arial, sans-serif;\n"
+                            + "            background-color: #f4f4f4;\n"
+                            + "            margin: 0;\n"
+                            + "            padding: 0;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .container {\n"
+                            + "            max-width: 600px;\n"
+                            + "            margin: 20px auto;\n"
+                            + "            background-color: #fff;\n"
+                            + "            padding: 20px;\n"
+                            + "            border-radius: 5px;\n"
+                            + "            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .header {\n"
+                            + "            text-align: center;\n"
+                            + "            border-bottom: 1px solid #ddd;\n"
+                            + "            padding-bottom: 20px;\n"
+                            + "            margin-bottom: 20px;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .header img {\n"
+                            + "            max-width: 100px;\n"
+                            + "            height: auto;\n"
+                            + "            display: block;\n"
+                            + "            margin: 0 auto 10px;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .header h1 {\n"
+                            + "            margin: 0;\n"
+                            + "            color: #333;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .contact-info {\n"
+                            + "            text-align: center;\n"
+                            + "            margin-bottom: 20px;\n"
+                            + "            color: #666;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .invoice-details {\n"
+                            + "            margin: 20px 0;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .invoice-details h2 {\n"
+                            + "            color: #333;\n"
+                            + "            border-bottom: 1px solid #ddd;\n"
+                            + "            padding-bottom: 10px;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .invoice-details p {\n"
+                            + "            margin: 5px 0;\n"
+                            + "            color: #666;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .items {\n"
+                            + "            width: 100%;\n"
+                            + "            border-collapse: collapse;\n"
+                            + "            margin: 20px 0;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .items th,\n"
+                            + "        .items td {\n"
+                            + "            padding: 10px;\n"
+                            + "            border: 1px solid #ddd;\n"
+                            + "            text-align: left;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .items th {\n"
+                            + "            background-color: #f8f8f8;\n"
+                            + "            color: #333;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .total {\n"
+                            + "            text-align: right;\n"
+                            + "            margin: 20px 0;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .total p {\n"
+                            + "            margin: 5px 0;\n"
+                            + "            color: #333;\n"
+                            + "            font-size: 16px;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .important-notice {\n"
+                            + "            margin: 20px 0;\n"
+                            + "            color: #666;\n"
+                            + "            font-size: 14px;\n"
+                            + "        }\n"
+                            + "\n"
+                            + "        .footer {\n"
+                            + "            text-align: center;\n"
+                            + "            border-top: 1px solid #ddd;\n"
+                            + "            padding-top: 10px;\n"
+                            + "            color: #666;\n"
+                            + "            font-size: 14px;\n"
+                            + "        }\n"
+                            + "    </style>\n"
+                            + "</head>\n"
+                            + "\n"
+                            + "<body>\n"
+                            + "    <div class=\"container\">\n"
+                            + "        <div class=\"header\">\n"
+                            + "            <img src=\"https://final.codelygroup.com/img/pngwing.png\" alt=\"Company Logo\">\n"
+                            + "            <h1>FoodCity</h1>\n"
+                            + "        </div>\n"
+                            + "        <div class=\"contact-info\">\n"
+                            + "            <p>" + preferences.get("branch", "default_value").toUpperCase() + "</p>\n"
+                            + "            <p>Hotline: 0715316398 / 0715316399</p>\n"
+                            + "        </div>\n"
+                            + "        <div class=\"invoice-details\">\n"
+                            + "            <h2>Invoice Details</h2>\n"
+                            + "            <p><strong>Invoice Number:</strong> " + jLabel8.getText() + "</p>\n"
+                            + "            <p><strong>Date:</strong> " + String.valueOf(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))) + "</p>\n"
+                            + "            <p><strong>User:</strong> " + preferences.get("first_name", "default_value") + "</p>\n"
+                            + "        </div>\n"
+                            + "        <table class=\"items\">\n"
+                            + "            <thead>\n"
+                            + "                <tr>\n"
+                            + "                    <th>No</th>\n"
+                            + "                    <th>Item</th>\n"
+                            + "                    <th>Quantity</th>\n"
+                            + "                    <th>Unit Price</th>\n"
+                            + "                    <th>Total</th>\n"
+                            + "                </tr>\n"
+                            + "            </thead>\n"
+                            + "            <tbody>\n"
+                            + item
+                            + "            </tbody>\n"
+                            + "        </table>\n"
+                            + "        <div class=\"total\">\n"
+                            + "            <p><strong>Gross Total:</strong> LKRS " + jTextField11.getText() + "</p>\n"
+                            + "            <p><strong>Cash:</strong> LKRS " + String.valueOf(payment) + "</p>\n"
+                            + "            <p><strong>Balance Amount:</strong> LKRS " + jTextField6.getText() + "</p>\n"
+                            + "            <p><strong>Discount Amount:</strong> LKRS " + String.valueOf(discount) + "</p>\n"
+                            + "        </div>\n"
+                            + "        <div class=\"important-notice\">\n"
+                            + "            <p>Important Notice: In case of a price discrepancy, return the item & bill within 7 days to refund the difference.</p>\n"
+                            + "        </div>\n"
+                            + "        <div class=\"footer\">\n"
+                            + "            <p>Thank You!</p>\n"
+                            + "            <p>This invoice was sent by <strong>Supermarket Management System</strong>.</p>\n"
+                            + "            <p>&copy; " + Year.now() + " Supermarket Management System. All rights reserved.</p>\n"
+                            + "        </div>\n"
+                            + "    </div>\n"
+                            + "</body>\n"
+                            + "\n"
+                            + "</html>";
+
+                    SendEmail.send(cu.getEmail(), body, "Invoice");
+
+                }
+
                 LodeingProduct();
                 LodingInvoice();
                 genaretInvoice();
@@ -1756,12 +1938,17 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton34ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        
+
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyReleased
         LodingInvoice();
     }//GEN-LAST:event_jTextField3KeyReleased
+
+    private void jButton35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton35ActionPerformed
+        this.dispose();
+        new Login().setVisible(true);
+    }//GEN-LAST:event_jButton35ActionPerformed
 
     /**
      * @param args the command line arguments
