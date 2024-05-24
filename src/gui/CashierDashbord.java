@@ -14,14 +14,18 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,19 +33,24 @@ import javax.swing.table.DefaultTableModel;
 import model.CustomerData;
 import model.InvoiceItem;
 import model.MySQL;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author chamu
  */
 public class CashierDashbord extends javax.swing.JFrame {
-    
+
     Preferences preferences = Preferences.userRoot();
-    
+
     HashMap<String, InvoiceItem> invoiceItemMap = new HashMap<>();
     HashMap<String, InvoiceItem> stockMap = new HashMap<>();
     HashMap<String, String> methodMap = new HashMap<>();
-    
+
     private double total;
     private double discount;
     private double payment;
@@ -49,48 +58,112 @@ public class CashierDashbord extends javax.swing.JFrame {
     private double balance;
     private String paymentmethod = "Select";
     private double newpoint;
-    
+
+    private String setFirst = "";
+    private String setLast = "";
+    private String op = "";
+    private String ans = "";
+
     private CustomerData cu;
-    
+
     public final void setCustomerData(CustomerData c) {
-        
+
         cu = c;
-        
+
         jLabel25.setText(c.getFname() + " " + c.getLname());
         jLabel27.setText(c.getMobile());
         jLabel29.setText(String.valueOf(c.getPoint()));
-        
+
     }
 
-    /**
-     * Creates new form CashierDashbord
-     */
+    private final void LodingInvoice() {
+        
+        String q = "SELECT * FROM `invoice` WHERE DATE(`in_date`) = '2024-05-24' AND `in_users` = '" + preferences.get("id", "default_value") + "'";
+        
+        if (!jTextField3.getText().isBlank()) {
+            q +=" AND `in_no` LIKE '"+jTextField3.getText()+"%'";
+        }
+
+        try {
+            ResultSet resultset = MySQL.execute(q);
+
+            DefaultListModel<String> model = new DefaultListModel<>();
+            model.removeAllElements();
+            int rowCount = 0;
+            while (resultset.next()) {
+                rowCount++;
+                model.addElement("In No: " + resultset.getString("in_no") + " Date: " + resultset.getString("in_date"));
+            }
+
+            jList1.setModel(model);
+            jLabel46.setText(String.valueOf(rowCount));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void genaretInvoice() {
+
+        long id = System.currentTimeMillis();
+        jLabel8.setText(String.valueOf(id) + preferences.get("id", "default_value"));
+
+    }
+
+    private final void OpenCustomerRegistration() {
+
+        new CustomerRegistration(this, true).setVisible(true);
+
+    }
+
+    private final void Cancel() {
+
+        DefaultTableModel modle = (DefaultTableModel) jTable2.getModel();
+        modle.setRowCount(0);
+        cal();
+        jComboBox2.setSelectedIndex(0);
+        jFormattedTextField1.setText("0.00");
+        jFormattedTextField2.setText("0.00");
+        jLabel25.setText("");
+        jLabel27.setText("");
+        jLabel29.setText("0");
+        jCheckBox1.setSelected(false);
+        jTextField10.setText("0.00");
+        jTextField11.setText("0.00");
+        jFormattedTextField2.setText("0.00");
+        jTextField6.setText("0.00");
+        cal();
+        invoiceItemMap.clear();
+
+    }
+
     private final void cal() {
-        
+
         paymentmethod = String.valueOf(jComboBox2.getSelectedItem());
-        
+
         if (jCheckBox1.isSelected()) {
             withdrwpoint = true;
         } else {
             withdrwpoint = false;
         }
-        
+
         total = Double.parseDouble(jTextField10.getText());
-        
+
         if (jFormattedTextField1.getText().isBlank()) {
             discount = 0;
         } else {
             discount = Double.parseDouble(jFormattedTextField1.getText());
         }
-        
+
         if (jFormattedTextField2.getText().isBlank()) {
             payment = 0;
         } else {
             payment = Double.parseDouble(jFormattedTextField2.getText());
         }
-        
+
         total -= discount;
-        
+
         if (total < 0) {
             jFormattedTextField1.setText("0.00");
         } else {
@@ -105,7 +178,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                 total = 0;
             }
         }
-        
+
         if (paymentmethod.equals("Cash")) {
             balance = payment - total;
         } else {
@@ -113,35 +186,35 @@ public class CashierDashbord extends javax.swing.JFrame {
             balance = 0;
             jFormattedTextField2.setText(String.valueOf(total));
         }
-        
+
         jTextField6.setText(String.valueOf(balance));
         jTextField11.setText(String.valueOf(total));
-        
+
     }
-    
+
     private final void LodeingProduct() {
-        
+
         String q = "SELECT * FROM `product` INNER JOIN `barnd`  ON `product`.`p_barnd` = `barnd`.`br_id` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock` WHERE `product`.`p_status` = '1'";
-        
+
         if (!jTextField1.getText().isBlank()) {
             q += " AND `product`.`p_id` LIKE '" + jTextField1.getText() + "%'";
         }
-        
+
         if (!jTextField2.getText().isBlank()) {
             q += " AND `product`.`p_name` LIKE '" + jTextField2.getText() + "%'";
         }
-        
+
         double max = 0;
         double min = 0;
-        
+
         if (!jFormattedTextField4.getText().isBlank()) {
             min = Double.parseDouble(jFormattedTextField4.getText());
         }
-        
+
         if (!jFormattedTextField5.getText().isBlank()) {
             max = Double.parseDouble(jFormattedTextField5.getText());
         }
-        
+
         if (min > 0 && max == 0) {
             q += " AND `stock`.`sto_selling_price` >= '" + min + "'";
         } else if (max > 0 && min == 0) {
@@ -149,11 +222,11 @@ public class CashierDashbord extends javax.swing.JFrame {
         } else if (min > 0 && max > 0) {
             q += " AND `stock`.`sto_selling_price` >= '" + min + "' AND `stock`.`sto_selling_price` <= '" + max + "'";
         }
-        
+
         q += "ORDER BY ";
-        
+
         String getGroup = String.valueOf(jComboBox1.getSelectedItem());
-        
+
         if (getGroup.equals("Date of Expier Descending")) {
             q += " `stock`.`sto_exp` DESC";
         } else if (getGroup.equals("Date of Expier Ascending")) {
@@ -163,19 +236,19 @@ public class CashierDashbord extends javax.swing.JFrame {
         } else if (getGroup.equals("Price Descending")) {
             q += " `stock`.`sto_selling_price` DESC";
         }
-        
+
         try {
-            
+
             ResultSet resultSet = MySQL.execute(q);
-            
+
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            
+
             model.setRowCount(0);
-            
+
             while (resultSet.next()) {
-                
+
                 Vector<String> vector = new Vector<>();
-                
+
                 vector.add(resultSet.getString("p_id"));
                 vector.add(resultSet.getString("sto_id"));
                 vector.add(resultSet.getString("p_name"));
@@ -184,9 +257,9 @@ public class CashierDashbord extends javax.swing.JFrame {
                 vector.add(resultSet.getString("stq_qty"));
                 vector.add(resultSet.getString("sto_mfg"));
                 vector.add(resultSet.getString("sto_exp"));
-                
+
                 InvoiceItem item = new InvoiceItem();
-                
+
                 item.setProductId(resultSet.getString("p_id"));
                 item.setStockId(resultSet.getString("sto_id"));
                 item.setProductName(resultSet.getString("p_name"));
@@ -196,25 +269,25 @@ public class CashierDashbord extends javax.swing.JFrame {
                 item.setMfg(resultSet.getDate("sto_mfg"));
                 item.setExp(resultSet.getDate("sto_exp"));
                 item.setImage(resultSet.getBytes("p_img"));
-                
+
                 stockMap.put(resultSet.getString("sto_id"), item);
-                
+
                 model.addRow(vector);
-                
+
             }
-            
+
             jTable1.setModel(model);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
     public final void SetItem() {
-        
+
         int row = jTable1.getSelectedRow();
-        
+
         jLabel10.setText(String.valueOf(jTable1.getValueAt(row, 2)));
         jTextField8.setText(String.valueOf(jTable1.getValueAt(row, 4)));
         jLabel19.setText(String.valueOf(jTable1.getValueAt(row, 2)));
@@ -222,13 +295,13 @@ public class CashierDashbord extends javax.swing.JFrame {
         jLabel22.setText(String.valueOf(jTable1.getValueAt(row, 3)));
         jFormattedTextField3.setText("1");
         jFormattedTextField3.grabFocus();
-        
+
         InvoiceItem product = stockMap.get(String.valueOf(jTable1.getValueAt(row, 1)));
-        
+
         jLabel14.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(product.getImage())));
-        
+
     }
-    
+
     private final void SetItemReset() {
         jLabel10.setText("");
         jTextField8.setText("0.0");
@@ -239,46 +312,46 @@ public class CashierDashbord extends javax.swing.JFrame {
         jFormattedTextField3.setText("0");
         jTable1.clearSelection();
     }
-    
+
     private final void SearchReset() {
-        
+
         jTextField1.setText("");
         jTextField2.setText("");
         jFormattedTextField4.setText("0.0");
         jFormattedTextField5.setText("0.00");
         jComboBox1.setSelectedIndex(0);
         LodeingProduct();
-        
+
     }
-    
+
     private void lodePyemantMethod() {
-        
+
         try {
             ResultSet result = MySQL.execute("SELECT * FROM `payment_method`");
-            
+
             Vector vector = new Vector();
-            
+
             while (result.next()) {
                 vector.add(result.getString("pa_name"));
                 methodMap.put(result.getString("pa_name"), result.getString("pa_id"));
             }
-            
+
             jComboBox2.setModel(new DefaultComboBoxModel(vector));
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
     public final void SetInvoiceItem() {
-        
+
         int row = jTable1.getSelectedRow();
-        
+
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "pleas select item", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
         } else {
-            
+
             if (jFormattedTextField3.getText().isBlank()) {
                 JOptionPane.showMessageDialog(this, "pleas select enter qty", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
             } else if (Double.parseDouble(jFormattedTextField3.getText()) <= 0) {
@@ -286,11 +359,11 @@ public class CashierDashbord extends javax.swing.JFrame {
             } else if (Double.parseDouble(jFormattedTextField3.getText()) > Double.parseDouble(String.valueOf(jTable1.getValueAt(row, 5)))) {
                 JOptionPane.showMessageDialog(this, "pleas check qty!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
             } else {
-                
+
                 InvoiceItem stock = stockMap.get(String.valueOf(jTable1.getValueAt(row, 1)));
-                
+
                 InvoiceItem item = new InvoiceItem();
-                
+
                 item.setStockId(stock.getStockId());
                 item.setProductId(stock.getProductId());
                 item.setProductName(stock.getProductName());
@@ -300,26 +373,26 @@ public class CashierDashbord extends javax.swing.JFrame {
                 item.setMfg(stock.getMfg());
                 item.setExp(stock.getExp());
                 item.setTotal(stock.getSellingPrice() * Double.valueOf(jFormattedTextField3.getText()));
-                
+
                 invoiceItemMap.put(String.valueOf(jTable1.getValueAt(row, 1)), item);
-                
+
                 lodeInvoiceItems();
             }
-            
+
         }
-        
+
     }
-    
+
     private void lodeInvoiceItems() {
-        
+
         DefaultTableModel modle = (DefaultTableModel) jTable2.getModel();
         modle.setRowCount(0);
         total = 0;
-        
+
         for (InvoiceItem object : invoiceItemMap.values()) {
-            
+
             Vector<String> vector = new Vector<>();
-            
+
             vector.add(object.getProductId());
             vector.add(object.getStockId());
             vector.add(object.getProductName());
@@ -329,20 +402,20 @@ public class CashierDashbord extends javax.swing.JFrame {
             vector.add(String.valueOf(object.getExp()));
             vector.add(String.valueOf(object.getQty()));
             vector.add(String.valueOf(object.getTotal()));
-            
+
             modle.addRow(vector);
-            
+
             total += object.getTotal();
-            
+
         }
-        
+
         jTextField10.setText(String.valueOf(total));
-        
+
         jTable2.setModel(modle);
         cal();
-        
+
     }
-    
+
     private void startClock() {
         Thread clockThread = new Thread(() -> {
             while (true) {
@@ -356,17 +429,19 @@ public class CashierDashbord extends javax.swing.JFrame {
         });
         clockThread.start();
     }
-    
+
     public CashierDashbord() {
         initComponents();
         jLabel38.setText(new SimpleDateFormat("dd MMMM yyyy").format(new Date()));
         jLabel42.setText(preferences.get("username", "default_value"));
         jLabel43.setText(preferences.get("first_name", "default_value") + " " + preferences.get("last_name", "default_value"));
         jLabel50.setText(preferences.get("branch", "default_value"));
-        
+
         startClock();
         LodeingProduct();
         lodePyemantMethod();
+        LodingInvoice();
+        genaretInvoice();
     }
 
     /**
@@ -381,26 +456,9 @@ public class CashierDashbord extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
-        jTextField5 = new javax.swing.JTextField();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
-        jButton15 = new javax.swing.JButton();
-        jButton16 = new javax.swing.JButton();
-        jButton17 = new javax.swing.JButton();
-        jButton18 = new javax.swing.JButton();
-        jButton19 = new javax.swing.JButton();
-        jButton20 = new javax.swing.JButton();
-        jButton21 = new javax.swing.JButton();
-        jButton22 = new javax.swing.JButton();
-        jButton23 = new javax.swing.JButton();
-        jButton24 = new javax.swing.JButton();
-        jButton26 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jTextField3 = new javax.swing.JTextField();
         jLabel37 = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -438,7 +496,6 @@ public class CashierDashbord extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jButton32 = new javax.swing.JButton();
-        jButton33 = new javax.swing.JButton();
         jButton34 = new javax.swing.JButton();
         jButton35 = new javax.swing.JButton();
         jButton36 = new javax.swing.JButton();
@@ -493,176 +550,40 @@ public class CashierDashbord extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jTextField5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jScrollPane3.setViewportView(jList1);
 
-        jButton7.setBackground(new java.awt.Color(255, 153, 153));
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton7.setText("C");
-
-        jButton8.setBackground(new java.awt.Color(255, 153, 153));
-        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton8.setText("CE");
-
-        jButton9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton9.setText("/");
-
-        jButton10.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jButton10.setText("+/-");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                jTextField3ActionPerformed(evt);
             }
         });
-
-        jButton11.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton11.setText("7");
-
-        jButton12.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton12.setText("8");
-
-        jButton13.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton13.setText("9");
-
-        jButton14.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton14.setText("x");
-
-        jButton15.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton15.setText("4");
-
-        jButton16.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton16.setText("4");
-
-        jButton17.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton17.setText("-");
-        jButton17.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton17ActionPerformed(evt);
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField3KeyReleased(evt);
             }
         });
-
-        jButton18.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton18.setText("5");
-        jButton18.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton18ActionPerformed(evt);
-            }
-        });
-
-        jButton19.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton19.setText("3");
-
-        jButton20.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton20.setText("1");
-
-        jButton21.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton21.setText("+");
-
-        jButton22.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton22.setText("2");
-        jButton22.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton22ActionPerformed(evt);
-            }
-        });
-
-        jButton23.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton23.setText("0");
-
-        jButton24.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton24.setText(".");
-
-        jButton26.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton26.setText("=");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGap(0, 28, Short.MAX_VALUE)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton24, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 28, Short.MAX_VALUE))
-            .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addComponent(jTextField3))
+                .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton24, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap(8, Short.MAX_VALUE)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jLabel37.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
@@ -742,7 +663,7 @@ public class CashierDashbord extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addContainerGap(22, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel41, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel40)
@@ -752,7 +673,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                     .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -889,7 +810,7 @@ public class CashierDashbord extends javax.swing.JFrame {
         });
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton2.setText("X");
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/refresh-20.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -1004,23 +925,16 @@ public class CashierDashbord extends javax.swing.JFrame {
         jButton32.setBorder(null);
         jPanel5.add(jButton32);
 
-        jButton33.setBackground(new java.awt.Color(0, 0, 51));
-        jButton33.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton33.setForeground(new java.awt.Color(255, 255, 255));
-        jButton33.setText("Manage Invoices");
-        jButton33.setBorder(null);
-        jButton33.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton33ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(jButton33);
-
         jButton34.setBackground(new java.awt.Color(0, 0, 51));
         jButton34.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton34.setForeground(new java.awt.Color(255, 255, 255));
         jButton34.setText("Manage  Customers");
         jButton34.setBorder(null);
+        jButton34.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton34ActionPerformed(evt);
+            }
+        });
         jPanel5.add(jButton34);
 
         jButton35.setBackground(new java.awt.Color(0, 0, 51));
@@ -1137,7 +1051,7 @@ public class CashierDashbord extends javax.swing.JFrame {
         jTextField8.setText("0.00");
 
         jButton5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton5.setText("X");
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/refresh-20.png"))); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -1242,6 +1156,7 @@ public class CashierDashbord extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel13.setText("Selected Product");
 
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("  ");
         jLabel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM));
 
@@ -1442,7 +1357,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel34)
                         .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1465,7 +1380,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                         .addComponent(jButton31, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton30, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -1548,7 +1463,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                                 .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1563,7 +1478,9 @@ public class CashierDashbord extends javax.swing.JFrame {
                             .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 1226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, 0))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
@@ -1583,7 +1500,6 @@ public class CashierDashbord extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1591,18 +1507,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
-        );
+        getContentPane().add(jPanel1);
 
         pack();
         setLocationRelativeTo(null);
@@ -1621,24 +1526,8 @@ public class CashierDashbord extends javax.swing.JFrame {
         SearchReset();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
-
-    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton18ActionPerformed
-
-    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton17ActionPerformed
-
-    private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton22ActionPerformed
-
     private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
-        new CustomerRegistration(this, true).setVisible(true);
+        OpenCustomerRegistration();
     }//GEN-LAST:event_jButton29ActionPerformed
 
     private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
@@ -1661,10 +1550,6 @@ public class CashierDashbord extends javax.swing.JFrame {
     private void jFormattedTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
 
     }//GEN-LAST:event_jFormattedTextField1ActionPerformed
-
-    private void jButton33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton33ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton33ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         SetItemReset();
@@ -1703,22 +1588,22 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        
+
         if (evt.getClickCount() == 2) {
-            
+
             int row = jTable2.getSelectedRow();
-            
+
             if (row != -1) {
-                
+
                 int option = JOptionPane.showConfirmDialog(this, "Remove this item?", "WARNING", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-                
+
                 if (option == JOptionPane.YES_OPTION) {
                     invoiceItemMap.remove(String.valueOf(jTable2.getValueAt(row, 1)));
                     lodeInvoiceItems();
                 }
-                
+
             }
-            
+
         }
 
     }//GEN-LAST:event_jTable2MouseClicked
@@ -1745,15 +1630,15 @@ public class CashierDashbord extends javax.swing.JFrame {
         } else {
             jFormattedTextField2.setEditable(true);
         }
-        
+
         jFormattedTextField1.setText("0.00");
         jFormattedTextField2.setText("0.00");
-        
+
         cal();
     }//GEN-LAST:event_jComboBox2ItemStateChanged
 
     private void jFormattedTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField2KeyReleased
-        
+
         if (jFormattedTextField2.getText().matches("^\\d+$")) {
             cal();
             jLabel6.setText("");
@@ -1764,7 +1649,7 @@ public class CashierDashbord extends javax.swing.JFrame {
             jButton30.setEnabled(false);
             jTextField11.setText(jTextField10.getText());
         }
-        
+
 
     }//GEN-LAST:event_jFormattedTextField2KeyReleased
 
@@ -1786,22 +1671,105 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField11ActionPerformed
 
     private void jButton31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton31ActionPerformed
-        // TODO add your handling code here:
+        Cancel();
     }//GEN-LAST:event_jButton31ActionPerformed
 
     private void jButton30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton30ActionPerformed
-       
-        
-        
+
+        if (invoiceItemMap == null) {
+            JOptionPane.showMessageDialog(this, "Please add items!", "WARNING", JOptionPane.WARNING_MESSAGE);
+        } else if (jLabel25.getText().isBlank()) {
+            JOptionPane.showMessageDialog(this, "Please select customer!", "WARNING", JOptionPane.WARNING_MESSAGE);
+        } else {
+            
+            
+
+            try {
+
+                MySQL.execute("INSERT INTO `invoice` ("
+                        + "`in_no`,"
+                        + "`in_date`,"
+                        + "`in_pide`,"
+                        + "`in_discount`,"
+                        + "`in_customers`,"
+                        + "`in_branch`,"
+                        + "`in_status`,"
+                        + "`in_users`,"
+                        + "`in_payment_method`) "
+                        + "VALUES ("
+                        + "'" + jLabel8.getText() + "',"
+                        + "'" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "',"
+                        + "'" + String.valueOf(payment) + "',"
+                        + "'" + String.valueOf(discount) + "',"
+                        + "'" + cu.getMobile() + "',"
+                        + "'" + preferences.get("branch_id", "default_value") + "',"
+                        + "'1',"
+                        + "'" + preferences.get("id", "default_value") + "',"
+                        + "'" + methodMap.get(String.valueOf(jComboBox2.getSelectedItem())) + "');");
+
+                for (InvoiceItem entry : invoiceItemMap.values()) {
+
+                    MySQL.execute("INSERT INTO `invoice_items`("
+                            + "`it_stock`,"
+                            + "`it_qty`,"
+                            + "`it_invoice_no`) VALUES("
+                            + "'" + entry.getStockId() + "',"
+                            + "'" + entry.getQty() + "',"
+                            + "'" + jLabel8.getText() + "')");
+
+                    MySQL.execute("UPDATE `stock_qty` SET `stq_qty` = `stq_qty`-'" + entry.getQty() + "' WHERE `stq_stock` = '" + entry.getStockId() + "' AND `stq_branch` = '" + preferences.get("branch_id", "default_value") + "' ");
+
+                }
+
+                HashMap<String, Object> parametrs = new HashMap<>();
+
+                parametrs.put("Parameter1", jLabel8.getText());
+                parametrs.put("Parameter2", preferences.get("first_name", "default_value"));
+                parametrs.put("Parameter3", String.valueOf(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+                parametrs.put("Parameter4", preferences.get("branch", "default_value").toUpperCase());
+                parametrs.put("Parameter5", jTextField11.getText());
+                parametrs.put("Parameter6", String.valueOf(payment));
+                parametrs.put("Parameter7", jTextField6.getText());
+                parametrs.put("Parameter8", String.valueOf(discount));
+
+                JRTableModelDataSource dataSouce = new JRTableModelDataSource(jTable2.getModel());
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport("src/report/final_project_invoce.jasper", parametrs, dataSouce);
+
+                JasperViewer.viewReport(jasperPrint, false);
+
+                LodeingProduct();
+                LodingInvoice();
+                genaretInvoice();
+
+//            JasperPrintManager.printReport(jasperPrint, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }//GEN-LAST:event_jButton30ActionPerformed
+
+    private void jButton34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton34ActionPerformed
+        // TODO add your handling code here:
+        OpenCustomerRegistration();
+    }//GEN-LAST:event_jButton34ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyReleased
+        LodingInvoice();
+    }//GEN-LAST:event_jTextField3KeyReleased
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         FlatLightLaf.setup();
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 CashierDashbord home = new CashierDashbord();
@@ -1809,44 +1777,24 @@ public class CashierDashbord extends javax.swing.JFrame {
                 home.setVisible(true);
             }
         });
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton18;
-    private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton20;
-    private javax.swing.JButton jButton21;
-    private javax.swing.JButton jButton22;
-    private javax.swing.JButton jButton23;
-    private javax.swing.JButton jButton24;
     private javax.swing.JButton jButton25;
-    private javax.swing.JButton jButton26;
     private javax.swing.JButton jButton29;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton30;
     private javax.swing.JButton jButton31;
     private javax.swing.JButton jButton32;
-    private javax.swing.JButton jButton33;
     private javax.swing.JButton jButton34;
     private javax.swing.JButton jButton35;
     private javax.swing.JButton jButton36;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
@@ -1902,6 +1850,7 @@ public class CashierDashbord extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1913,6 +1862,7 @@ public class CashierDashbord extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -1922,7 +1872,7 @@ public class CashierDashbord extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField8;
     // End of variables declaration//GEN-END:variables
