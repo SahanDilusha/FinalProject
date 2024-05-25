@@ -955,6 +955,11 @@ public class CashierDashbord extends javax.swing.JFrame {
         jButton36.setForeground(new java.awt.Color(255, 255, 255));
         jButton36.setText("Settings");
         jButton36.setBorder(null);
+        jButton36.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton36ActionPerformed(evt);
+            }
+        });
         jPanel5.add(jButton36);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -1949,6 +1954,10 @@ public class CashierDashbord extends javax.swing.JFrame {
         this.dispose();
         new Login().setVisible(true);
     }//GEN-LAST:event_jButton35ActionPerformed
+
+    private void jButton36ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton36ActionPerformed
+        new Settings(this, true).setVisible(true);
+    }//GEN-LAST:event_jButton36ActionPerformed
 
     /**
      * @param args the command line arguments

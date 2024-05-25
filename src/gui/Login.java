@@ -22,14 +22,13 @@ import java.util.logging.*;
  * @author sahan
  */
 public class Login extends javax.swing.JFrame {
-    
+
     private int at = 0;
     private boolean st = true;
     private String email;
     private String name;
     private int tp;
-    
-    
+
     /**
      * Creates new form Login
      */
@@ -40,36 +39,36 @@ public class Login extends javax.swing.JFrame {
 
         // Format the OTP as a string
         String otpString = String.valueOf(otp);
-        
+
         return otpString;
     }
-    
+
     private final void ShowOTPPanal() {
         main.removeAll();
         main.add(jPanel3);
         main.repaint();
         main.revalidate();
     }
-    
+
     private final void ShowCashierDashbord() {
         SendLoginMail(name, email);
         this.dispose();
         CashierDashbord ca = new CashierDashbord();
         ca.setVisible(true);
         ca.setExtendedState(MAXIMIZED_BOTH);
-        
+
     }
-    
+
     private final void ShowManagerDashboard() {
         SendLoginMail(name, email);
         this.dispose();
         ManagerDashboard ma = new ManagerDashboard();
         ma.setVisible(true);
-        
+
     }
-    
+
     private final String SendLoginMail(String name, String email) {
-        
+
         return SendEmail.send(email, "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -144,9 +143,9 @@ public class Login extends javax.swing.JFrame {
                 + "</body>\n"
                 + "</html>", "Login Notification");
     }
-    
+
     private final String SendOtpMail(String email, String otp) {
-        
+
         return SendEmail.send(email, "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -224,9 +223,9 @@ public class Login extends javax.swing.JFrame {
                 + "    </div>\n"
                 + "</body>\n"
                 + "</html>", "Login OTP");
-        
+
     }
-    
+
     public Login() {
         initComponents();
         jLabel9.setText("codely-group©" + Year.now().toString());
@@ -264,6 +263,7 @@ public class Login extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -449,27 +449,38 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Please enter your OTP Code to proceed.");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addGap(237, 237, 237))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton5))
-                    .addComponent(jLabel11)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(16, 16, 16))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(237, 237, 237))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(110, 110, 110))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -477,7 +488,9 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addComponent(jLabel10)
-                .addGap(112, 112, 112)
+                .addGap(35, 35, 35)
+                .addComponent(jLabel4)
+                .addGap(61, 61, 61)
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -485,7 +498,7 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(182, Short.MAX_VALUE))
         );
 
         main.add(jPanel3, "card3");
@@ -512,9 +525,9 @@ public class Login extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
-            
+
             jPasswordField1.setEchoChar((char) 0);
-            
+
         } else {
             jPasswordField1.setEchoChar('\u25cf');
         }
@@ -525,7 +538,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+
         if (jTextField1.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "please enter your username!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
         } else if (String.valueOf(jPasswordField1.getPassword()).isBlank()) {
@@ -533,22 +546,22 @@ public class Login extends javax.swing.JFrame {
         } else if (!String.valueOf(jPasswordField1.getPassword()).matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")) {
             JOptionPane.showMessageDialog(this, "invalid password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
         } else {
-            
+
             try {
-                
+
                 if (at != 3) {
-                    
-                    ResultSet result = MySQL.execute("SELECT * FROM `users` INNER JOIN `branch` ON `users`.`us_branch` = `branch`.`b_id` WHERE `users`.`us_password` = '" + String.valueOf(jPasswordField1.getPassword()) + "' AND `users`.`us_username` = '" + jTextField1.getText() + "';");
-                    
+
+                    ResultSet result = MySQL.execute("SELECT * FROM `users` INNER JOIN `branch` ON `users`.`us_branch` = `branch`.`b_id`  INNER JOIN `users_type` ON `users`.`us_type` =  `users_type`.`ut_id` WHERE `users`.`us_password` = '" + String.valueOf(jPasswordField1.getPassword()) + "' AND `users`.`us_username` = '" + jTextField1.getText() + "';");
+
                     if (result.next()) {
-                        
+
                         if (result.getInt("us_status") != 1) {
                             at += 1;
                             JOptionPane.showMessageDialog(this, "Your account is currently disabled!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            
+
                             Preferences preferences = Preferences.userRoot();
-                            
+
                             preferences.put("id", result.getString("us_id"));
                             preferences.put("username", result.getString("us_username"));
                             preferences.put("first_name", result.getString("us_fname"));
@@ -556,28 +569,31 @@ public class Login extends javax.swing.JFrame {
                             preferences.put("email", result.getString("us_email"));
                             preferences.put("mobile", result.getString("us_mobile"));
                             preferences.put("branch", result.getString("b_name"));
+                            preferences.put("user_type_id", result.getString("ut_id"));
+                            preferences.put("user_type_name", result.getString("ut_name"));
                             preferences.put("branch_id", result.getString("b_id"));
-                            
+                            preferences.put("two_facter", result.getString("us_two_facter"));
+
                             email = result.getString("us_email");
                             name = result.getString("us_fname") + " " + result.getString("us_lname");
-                            
+
                             if (result.getString("us_two_facter").equals("1")) {
                                 st = false;
                             } else {
                                 st = true;
                             }
-                            
+
                             if (result.getInt("us_type") == 1) {
-                                
+
                                 if (st == true) {
                                     ShowCashierDashbord();
-                                    
+
                                 } else {
                                     tp = result.getInt("us_type");
                                     ShowOTPPanal();
                                     SendOtpMail(result.getString("us_email"), result.getString("us_otp"));
                                 }
-                                
+
                             } else if (result.getInt("us_type") == 2) {
                                 if (st == true) {
                                     ShowManagerDashboard();
@@ -591,28 +607,28 @@ public class Login extends javax.swing.JFrame {
                                 JOptionPane.showMessageDialog(this, "invalid username or password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
                             }
                         }
-                        
+
                     } else {
                         at += 1;
                         JOptionPane.showMessageDialog(this, "invalid username or password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
                     }
-                    
+
                 } else {
-                    
+
                     JOptionPane.showMessageDialog(this, "attempt are over!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-                    
+
                     ResultSet result = MySQL.execute("SELECT * FROM `users` WHERE `users`.`us_username` = '" + jTextField1.getText() + "' AND `users`.`us_status`='1'");
-                    
+
                     if (result.next()) {
                         MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_username` = '" + jTextField1.getText() + "';");
                     }
-                    
+
                 }
-                
+
             } catch (Exception e) {
-              
+
             }
-            
+
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -621,44 +637,45 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
+
         if (jTextField2.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "please enter OTP code!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
-            
+
             try {
                 ResultSet result = MySQL.execute("SELECT `us_type` FROM `users` WHERE  `users`.`us_username` = '" + jTextField1.getText() + "' AND `users`.`us_otp` = '" + jTextField2.getText() + "';");
-                
+
                 if (result.next()) {
-                    
+
                     MySQL.execute("UPDATE `users` SET `users`.`us_otp` = '" + generateOTP() + "' WHERE `users`.`us_username` = '" + jTextField1.getText() + "';");
-                    
+
                     if (result.getInt("us_type") == 1) {
                         ShowCashierDashbord();
                     } else if (result.getInt("us_type") == 2) {
                         ShowManagerDashboard();
                     }
-                    
+
                 } else {
                     JOptionPane.showMessageDialog(this, "please check your OTP code!", "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
                 }
-                
+
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String otp = generateOTP();
-        
+
         try {
-            
+
             MySQL.execute("UPDATE `users` SET `users`.`us_otp` = '" + otp + "' WHERE `users`.`us_username` = '" + jTextField1.getText() + "';");
             SendOtpMail(email, otp);
             JOptionPane.showMessageDialog(this, "OTP Code is send!", "MESSAGE", JOptionPane.INFORMATION_MESSAGE);
-            
+
         } catch (Exception e) {
-            
+
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -666,9 +683,9 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         FlatLightLaf.setup();
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
@@ -688,6 +705,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
