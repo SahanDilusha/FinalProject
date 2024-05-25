@@ -626,6 +626,8 @@ public class Login extends javax.swing.JFrame {
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
 
             }
 
@@ -661,6 +663,7 @@ public class Login extends javax.swing.JFrame {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         }
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -675,7 +678,8 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "OTP Code is send!", "MESSAGE", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
-
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 

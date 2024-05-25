@@ -82,6 +82,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
         }
     }
 
@@ -506,7 +508,7 @@ public class CustomerRegistration extends javax.swing.JDialog {
                     check = false;
 
                     JOptionPane.showMessageDialog(this, "Invalid Customer Email", "Warning", JOptionPane.WARNING_MESSAGE);
-                    
+
                 } else {
 
                     try {
@@ -522,6 +524,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
                     }
 
                 }
@@ -552,6 +556,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
                 }
 
             }
@@ -606,6 +612,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
                             }
 
                         }
@@ -638,6 +646,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
                             DatabaseGetCustomer("ASC", "cu_fname", "");
                         } catch (Exception e) {
                             e.printStackTrace();
+                            JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
                         }
 
                     }
@@ -686,6 +696,9 @@ public class CustomerRegistration extends javax.swing.JDialog {
                     }
 
                 } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
                 }
 
                 jToggleButton1.setEnabled(false);

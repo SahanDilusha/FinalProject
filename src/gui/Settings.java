@@ -51,87 +51,88 @@ public class Settings extends javax.swing.JDialog {
 
         try {
             MySQL.execute("UPDATE `users` SET `us_otp` = '" + otp + "' WHERE `us_id` = '" + preferences.get("id", "default_value") + "';");
+            SendEmail.send(email, "<!DOCTYPE html>\n"
+                    + "<html lang=\"en\">\n"
+                    + "<head>\n"
+                    + "    <meta charset=\"UTF-8\">\n"
+                    + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                    + "    <title>" + subject + "</title>\n"
+                    + "    <style>\n"
+                    + "        body {\n"
+                    + "            font-family: Arial, sans-serif;\n"
+                    + "            background-color: #f4f4f4;\n"
+                    + "            margin: 0;\n"
+                    + "            padding: 0;\n"
+                    + "        }\n"
+                    + "        .container {\n"
+                    + "            max-width: 600px;\n"
+                    + "            margin: 0 auto;\n"
+                    + "            padding: 20px;\n"
+                    + "            background-color: #ffffff;\n"
+                    + "            border-radius: 8px;\n"
+                    + "            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n"
+                    + "        }\n"
+                    + "        .header {\n"
+                    + "            background-color: #4CAF50;\n"
+                    + "            color: #ffffff;\n"
+                    + "            padding: 10px;\n"
+                    + "            text-align: center;\n"
+                    + "            border-radius: 8px 8px 0 0;\n"
+                    + "        }\n"
+                    + "        .header h1 {\n"
+                    + "            margin: 0;\n"
+                    + "            font-size: 24px;\n"
+                    + "        }\n"
+                    + "        .content {\n"
+                    + "            padding: 20px;\n"
+                    + "        }\n"
+                    + "        .content h2 {\n"
+                    + "            font-size: 20px;\n"
+                    + "            color: #333333;\n"
+                    + "        }\n"
+                    + "        .content p {\n"
+                    + "            font-size: 16px;\n"
+                    + "            color: #666666;\n"
+                    + "        }\n"
+                    + "        .otp {\n"
+                    + "            font-size: 24px;\n"
+                    + "            font-weight: bold;\n"
+                    + "            color: #4CAF50;\n"
+                    + "            margin: 20px 0;\n"
+                    + "            text-align: center;\n"
+                    + "        }\n"
+                    + "        .footer {\n"
+                    + "            text-align: center;\n"
+                    + "            padding: 10px;\n"
+                    + "            font-size: 14px;\n"
+                    + "            color: #999999;\n"
+                    + "        }\n"
+                    + "    </style>\n"
+                    + "</head>\n"
+                    + "<body>\n"
+                    + "    <div class=\"container\">\n"
+                    + "        <div class=\"header\">\n"
+                    + "            <h1>" + subject + "</h1>\n"
+                    + "        </div>\n"
+                    + "        <div class=\"content\">\n"
+                    + "            <h2>Hello,</h2>\n"
+                    + "            <p>We received a request to " + text + ". To proceed, please use the following one-time password (OTP). This OTP is valid for the next 10 minutes.</p>\n"
+                    + "            <div class=\"otp\">" + otp + "</div>\n"
+                    + "            <p>If you did not request this change, please ignore this email or contact support immediately.</p>\n"
+                    + "            <p>Thank you,</p>\n"
+                    + "            <p>The Supermarket Management System Team</p>\n"
+                    + "        </div>\n"
+                    + "        <div class=\"footer\">\n"
+                    + "            <p>&copy; " + Year.now() + " Supermarket Management System. All rights reserved.</p>\n"
+                    + "        </div>\n"
+                    + "    </div>\n"
+                    + "</body>\n"
+                    + "</html>", subject);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+            JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
 
-        SendEmail.send(email, "<!DOCTYPE html>\n"
-                + "<html lang=\"en\">\n"
-                + "<head>\n"
-                + "    <meta charset=\"UTF-8\">\n"
-                + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-                + "    <title>" + subject + "</title>\n"
-                + "    <style>\n"
-                + "        body {\n"
-                + "            font-family: Arial, sans-serif;\n"
-                + "            background-color: #f4f4f4;\n"
-                + "            margin: 0;\n"
-                + "            padding: 0;\n"
-                + "        }\n"
-                + "        .container {\n"
-                + "            max-width: 600px;\n"
-                + "            margin: 0 auto;\n"
-                + "            padding: 20px;\n"
-                + "            background-color: #ffffff;\n"
-                + "            border-radius: 8px;\n"
-                + "            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n"
-                + "        }\n"
-                + "        .header {\n"
-                + "            background-color: #4CAF50;\n"
-                + "            color: #ffffff;\n"
-                + "            padding: 10px;\n"
-                + "            text-align: center;\n"
-                + "            border-radius: 8px 8px 0 0;\n"
-                + "        }\n"
-                + "        .header h1 {\n"
-                + "            margin: 0;\n"
-                + "            font-size: 24px;\n"
-                + "        }\n"
-                + "        .content {\n"
-                + "            padding: 20px;\n"
-                + "        }\n"
-                + "        .content h2 {\n"
-                + "            font-size: 20px;\n"
-                + "            color: #333333;\n"
-                + "        }\n"
-                + "        .content p {\n"
-                + "            font-size: 16px;\n"
-                + "            color: #666666;\n"
-                + "        }\n"
-                + "        .otp {\n"
-                + "            font-size: 24px;\n"
-                + "            font-weight: bold;\n"
-                + "            color: #4CAF50;\n"
-                + "            margin: 20px 0;\n"
-                + "            text-align: center;\n"
-                + "        }\n"
-                + "        .footer {\n"
-                + "            text-align: center;\n"
-                + "            padding: 10px;\n"
-                + "            font-size: 14px;\n"
-                + "            color: #999999;\n"
-                + "        }\n"
-                + "    </style>\n"
-                + "</head>\n"
-                + "<body>\n"
-                + "    <div class=\"container\">\n"
-                + "        <div class=\"header\">\n"
-                + "            <h1>" + subject + "</h1>\n"
-                + "        </div>\n"
-                + "        <div class=\"content\">\n"
-                + "            <h2>Hello,</h2>\n"
-                + "            <p>We received a request to " + text + ". To proceed, please use the following one-time password (OTP). This OTP is valid for the next 10 minutes.</p>\n"
-                + "            <div class=\"otp\">" + otp + "</div>\n"
-                + "            <p>If you did not request this change, please ignore this email or contact support immediately.</p>\n"
-                + "            <p>Thank you,</p>\n"
-                + "            <p>The Supermarket Management System Team</p>\n"
-                + "        </div>\n"
-                + "        <div class=\"footer\">\n"
-                + "            <p>&copy; " + Year.now() + " Supermarket Management System. All rights reserved.</p>\n"
-                + "        </div>\n"
-                + "    </div>\n"
-                + "</body>\n"
-                + "</html>", subject);
+        }
 
     }
 
@@ -771,6 +772,7 @@ public class Settings extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, "Your mobile number is updated!", "INFORMATION", JOptionPane.INFORMATION_MESSAGE);
 
                 } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                 }
             }
@@ -792,6 +794,8 @@ public class Settings extends javax.swing.JDialog {
                 MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
 
             ShowLogin();
@@ -900,13 +904,27 @@ public class Settings extends javax.swing.JDialog {
                         this.dispose();
                         new Login().setVisible(true);
                     } else {
-                        at3++;
-                        JOptionPane.showMessageDialog(this, "invalid your old password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-                        JOptionPane.showMessageDialog(this, "You only have " + String.valueOf(3 - at3) + " attempts left", "WARNING", JOptionPane.WARNING_MESSAGE);
+
+                        if (at3 == 3) {
+
+                            JOptionPane.showMessageDialog(this, "attempt are over! Your account is locked!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+
+                            MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
+
+                            ShowLogin();
+
+                        } else {
+                            at3++;
+                            JOptionPane.showMessageDialog(this, "invalid your old password!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(this, "You only have " + String.valueOf(3 - at3) + " attempts left", "WARNING", JOptionPane.WARNING_MESSAGE);
+                        }
+
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
                 }
             }
 
@@ -950,6 +968,8 @@ public class Settings extends javax.swing.JDialog {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
 
         }
@@ -964,6 +984,7 @@ public class Settings extends javax.swing.JDialog {
             try {
                 MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
                 e.printStackTrace();
             }
 
@@ -1073,11 +1094,7 @@ public class Settings extends javax.swing.JDialog {
 
                                 JOptionPane.showMessageDialog(this, "attempt are over! Your account is locked!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
 
-                                try {
-                                    MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
 
                                 ShowLogin();
 
@@ -1092,6 +1109,8 @@ public class Settings extends javax.swing.JDialog {
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
                 }
 
             }
@@ -1114,6 +1133,8 @@ public class Settings extends javax.swing.JDialog {
                 MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
 
             ShowLogin();
@@ -1288,12 +1309,7 @@ public class Settings extends javax.swing.JDialog {
                     if (at2 == 3) {
 
                         JOptionPane.showMessageDialog(this, "attempt are over! Your account is locked!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-
-                        try {
-                            MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        MySQL.execute("UPDATE `users` SET `users`.`us_status` = '2' WHERE `users`.`us_id` = '" + preferences.get("id", "default_value") + "';");
 
                         ShowLogin();
 
@@ -1306,6 +1322,8 @@ public class Settings extends javax.swing.JDialog {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
 
         }

@@ -1931,6 +1931,7 @@ public class CashierDashbord extends javax.swing.JFrame {
 
 //            JasperPrintManager.printReport(jasperPrint, true);
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
                 e.printStackTrace();
             }
 
