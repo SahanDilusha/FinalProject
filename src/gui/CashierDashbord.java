@@ -59,6 +59,7 @@ public class CashierDashbord extends javax.swing.JFrame {
     private double balance;
     private String paymentmethod = "Select";
     private double newpoint;
+    private double usedpoint = 0;
 
     private String setFirst = "";
     private String setLast = "";
@@ -167,16 +168,22 @@ public class CashierDashbord extends javax.swing.JFrame {
 
         if (total < 0) {
             jFormattedTextField1.setText("0.00");
-        } else {
+            withdrwpoint = false;
+        }
+
+        if (withdrwpoint == true) {
             if (Double.parseDouble(jLabel29.getText()) == total) {
                 newpoint = 0;
                 total = 0;
+                usedpoint = Double.parseDouble(jLabel29.getText());
             } else if (Double.parseDouble(jLabel29.getText()) < total) {
                 newpoint = 0;
                 total -= Double.parseDouble(jLabel29.getText());
-            } else {
+                usedpoint = Double.parseDouble(jLabel29.getText());
+            } else if (Double.parseDouble(jLabel29.getText()) > total) {
                 newpoint = Double.parseDouble(jLabel29.getText()) - total;
                 total = 0;
+                usedpoint = total;
             }
         }
 
@@ -1546,7 +1553,15 @@ public class CashierDashbord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton25ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
+
+        if (jCheckBox1.isSelected()) {
+            withdrwpoint = true;
+        } else {
+            withdrwpoint = false;
+        }
+
+        cal();
+        jFormattedTextField1.setText(String.valueOf(discount));
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jFormattedTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField2ActionPerformed
@@ -1710,12 +1725,26 @@ public class CashierDashbord extends javax.swing.JFrame {
                         + "'" + jLabel8.getText() + "',"
                         + "'" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "',"
                         + "'" + String.valueOf(payment) + "',"
-                        + "'" + String.valueOf(discount) + "',"
+                        + "'" + String.valueOf(discount + usedpoint) + "',"
                         + "'" + cu.getMobile() + "',"
                         + "'" + preferences.get("branch_id", "default_value") + "',"
                         + "'1',"
                         + "'" + preferences.get("id", "default_value") + "',"
                         + "'" + methodMap.get(String.valueOf(jComboBox2.getSelectedItem())) + "');");
+
+                if (Double.valueOf(jTextField11.getText()) >= 1000) {
+
+                    if (withdrwpoint == true) {
+                        MySQL.execute("UPDATE `customers` SET `cu_point` = '" + String.valueOf(1 + newpoint) + "' WHERE `cu_mobile` = '" + cu.getMobile() + "'");
+                    } else {
+                        MySQL.execute("UPDATE `customers` SET `cu_point` = `cu_point`+'1' WHERE `cu_mobile` = '" + cu.getMobile() + "'");
+                    }
+
+                } else {
+                    if (withdrwpoint == true) {
+                        MySQL.execute("UPDATE `customers` SET `cu_point` = '" + String.valueOf(newpoint) + "' WHERE `cu_mobile` = '" + cu.getMobile() + "'");
+                    }
+                }
 
                 int no = 0;
 
@@ -1752,13 +1781,14 @@ public class CashierDashbord extends javax.swing.JFrame {
                 parametrs.put("Parameter5", jTextField11.getText());
                 parametrs.put("Parameter6", String.valueOf(payment));
                 parametrs.put("Parameter7", jTextField6.getText());
-                parametrs.put("Parameter8", String.valueOf(discount));
+                parametrs.put("Parameter8", String.valueOf(discount + usedpoint));
 
                 JRTableModelDataSource dataSouce = new JRTableModelDataSource(jTable2.getModel());
 
                 JasperPrint jasperPrint = JasperFillManager.fillReport("src/report/final_project_invoce.jasper", parametrs, dataSouce);
 
                 JasperViewer.viewReport(jasperPrint, false);
+                //            JasperPrintManager.printReport(jasperPrint, true);
 
                 if (!cu.getEmail().isBlank() || cu.getEmail() != null) {
 
@@ -1905,7 +1935,7 @@ public class CashierDashbord extends javax.swing.JFrame {
                             + "            <p><strong>Gross Total:</strong> LKRS " + jTextField11.getText() + "</p>\n"
                             + "            <p><strong>Cash:</strong> LKRS " + String.valueOf(payment) + "</p>\n"
                             + "            <p><strong>Balance Amount:</strong> LKRS " + jTextField6.getText() + "</p>\n"
-                            + "            <p><strong>Discount Amount:</strong> LKRS " + String.valueOf(discount) + "</p>\n"
+                            + "            <p><strong>Discount Amount:</strong> LKRS " + String.valueOf(discount + usedpoint) + "</p>\n"
                             + "        </div>\n"
                             + "        <div class=\"important-notice\">\n"
                             + "            <p>Important Notice: In case of a price discrepancy, return the item & bill within 7 days to refund the difference.</p>\n"
@@ -1927,8 +1957,8 @@ public class CashierDashbord extends javax.swing.JFrame {
                 LodeingProduct();
                 LodingInvoice();
                 genaretInvoice();
+                Cancel();
 
-//            JasperPrintManager.printReport(jasperPrint, true);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
                 e.printStackTrace();
