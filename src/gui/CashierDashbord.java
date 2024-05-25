@@ -202,7 +202,7 @@ public class CashierDashbord extends javax.swing.JFrame {
 
     private final void LodeingProduct() {
 
-        String q = "SELECT * FROM `product` INNER JOIN `barnd`  ON `product`.`p_barnd` = `barnd`.`br_id` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock` WHERE `product`.`p_status` = '1'";
+        String q = "SELECT * FROM `product` INNER JOIN `barnd`  ON `product`.`p_barnd` = `barnd`.`br_id` INNER JOIN `stock` ON `product`.`p_id` = `stock`.`sto_product` INNER JOIN  `stock_qty` ON `stock`.`sto_id` = `stock_qty`.`stq_stock` WHERE `product`.`p_status` = '1' AND `barnd`.`br_id` = '" + preferences.get("branch_id", "default_value") + "'";
 
         if (!jTextField1.getText().isBlank()) {
             q += " AND `product`.`p_id` LIKE '" + jTextField1.getText() + "%'";
