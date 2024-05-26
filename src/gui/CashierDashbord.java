@@ -1787,8 +1787,11 @@ public class CashierDashbord extends javax.swing.JFrame {
 
                 JasperPrint jasperPrint = JasperFillManager.fillReport("src/report/final_project_invoce.jasper", parametrs, dataSouce);
 
-                JasperViewer.viewReport(jasperPrint, false);
-                //            JasperPrintManager.printReport(jasperPrint, true);
+                if (preferences.get("print", "default_value").equals("1")) {
+                    JasperViewer.viewReport(jasperPrint, false);
+                } else {
+                    JasperPrintManager.printReport(jasperPrint, false);
+                }
 
                 if (!cu.getEmail().isBlank() || cu.getEmail() != null) {
 
