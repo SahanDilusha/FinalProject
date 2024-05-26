@@ -87,22 +87,6 @@ public class Login extends javax.swing.JFrame {
 
     }
 
-    private final void ShowStockManagerDashboard() {
-
-        SendLoginMail(name, email);
-        this.dispose();
-        StockManagerDashbord sm = new StockManagerDashbord();
-        sm.setVisible(true);
-
-    }
-
-    private final void ShowStockStaffDashbord() {
-        SendLoginMail(name, email);
-        this.dispose();
-        ShowStockStaffDashbord ss = new ShowStockStaffDashbord();
-        ss.setVisible(true);
-    }
-
     private final void ShowAccountDashbord() {
         SendLoginMail(name, email);
         this.dispose();
@@ -687,22 +671,6 @@ public class Login extends javax.swing.JFrame {
                                     ShowOTPPanal();
                                     SendOtpMail(result.getString("us_email"), result.getString("us_otp"));
                                 }
-                            } else if (result.getInt("us_type") == 3) {
-                                if (st == true) {
-                                    ShowStockManagerDashboard();
-                                } else {
-                                    tp = result.getInt("us_type");
-                                    ShowOTPPanal();
-                                    SendOtpMail(result.getString("us_email"), result.getString("us_otp"));
-                                }
-                            } else if (result.getInt("us_type") == 4) {
-                                if (st == true) {
-                                    ShowStockStaffDashbord();
-                                } else {
-                                    tp = result.getInt("us_type");
-                                    ShowOTPPanal();
-                                    SendOtpMail(result.getString("us_email"), result.getString("us_otp"));
-                                }
                             } else if (result.getInt("us_type") == 5) {
                                 if (st == true) {
                                     ShowAccountDashbord();
@@ -791,10 +759,6 @@ public class Login extends javax.swing.JFrame {
                         ShowCashierDashbord();
                     } else if (result.getInt("us_type") == 2) {
                         ShowManagerDashboard();
-                    } else if (result.getInt("us_type") == 3) {
-                        ShowStockManagerDashboard();
-                    } else if (result.getInt("us_type") == 4) {
-                        ShowStockStaffDashbord();
                     } else if (result.getInt("us_type") == 5) {
                         ShowAccountDashbord();
                     } else if (result.getInt("us_type") == 6) {
