@@ -1,6 +1,6 @@
-package javaswingdev.form;
+package md.form;
 
-import javaswingdev.card.ModelCard;
+import md.card.ModelCard;
 
 public class Form_Dashboard extends javax.swing.JPanel {
 
@@ -36,12 +36,12 @@ public class Form_Dashboard extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        card1 = new javaswingdev.card.Card();
-        card2 = new javaswingdev.card.Card();
-        card3 = new javaswingdev.card.Card();
-        roundPanel1 = new javaswingdev.swing.RoundPanel();
+        card1 = new md.card.Card();
+        card2 = new md.card.Card();
+        card3 = new md.card.Card();
+        roundPanel1 = new md.swing.RoundPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javaswingdev.swing.table.Table();
+        table = new md.swing.table.Table();
 
         setOpaque(false);
 
@@ -123,11 +123,11 @@ public class Form_Dashboard extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javaswingdev.card.Card card1;
-    private javaswingdev.card.Card card2;
-    private javaswingdev.card.Card card3;
+    private md.card.Card card1;
+    private md.card.Card card2;
+    private md.card.Card card3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javaswingdev.swing.RoundPanel roundPanel1;
-    private javaswingdev.swing.table.Table table;
+    private md.swing.RoundPanel roundPanel1;
+    private md.swing.table.Table table;
     // End of variables declaration//GEN-END:variables
 }

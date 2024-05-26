@@ -1,4 +1,4 @@
-package javaswingdev.menu;
+package md.menu;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import javaswingdev.GoogleMaterialDesignIcon;
 import javaswingdev.GoogleMaterialIcon;
 import javaswingdev.GradientType;
-import javaswingdev.system.SystemColor;
+import md.system.SystemColor;
 import javax.swing.JButton;
 import javax.swing.border.EmptyBorder;
 import org.jdesktop.animation.timing.Animator;

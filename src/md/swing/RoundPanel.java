@@ -1,4 +1,4 @@
-package javaswingdev.swing;
+package md.swing;
 
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -7,7 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import javaswingdev.system.SystemColor;
+import md.system.SystemColor;
 import javax.swing.JPanel;
 
 public class RoundPanel extends JPanel {

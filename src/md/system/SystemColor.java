@@ -1,4 +1,4 @@
-package javaswingdev.system;
+package md.system;
 
 import java.awt.Color;
 

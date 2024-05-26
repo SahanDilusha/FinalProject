@@ -1,4 +1,4 @@
-package javaswingdev.card;
+package md.card;
 
 import java.awt.Color;
 import javaswingdev.GoogleMaterialDesignIcon;

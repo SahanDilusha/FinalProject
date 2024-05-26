@@ -1,11 +1,11 @@
-package javaswingdev.card;
+package md.card;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import javaswingdev.system.SystemColor;
+import md.system.SystemColor;
 import javax.swing.JLabel;
 
 public class LabelIcon extends JLabel {

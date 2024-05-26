@@ -1,4 +1,4 @@
-package javaswingdev.card;
+package md.card;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -101,7 +101,7 @@ public class Card extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lbIcon = new javaswingdev.card.LabelIcon();
+        lbIcon = new md.card.LabelIcon();
         lbValues = new javax.swing.JLabel();
         lbDescription = new javax.swing.JLabel();
 
@@ -145,7 +145,7 @@ public class Card extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbDescription;
-    private javaswingdev.card.LabelIcon lbIcon;
+    private md.card.LabelIcon lbIcon;
     private javax.swing.JLabel lbValues;
     // End of variables declaration//GEN-END:variables
 }

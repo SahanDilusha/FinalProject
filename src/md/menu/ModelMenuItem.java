@@ -1,4 +1,4 @@
-package javaswingdev.menu;
+package md.menu;
 
 import javaswingdev.GoogleMaterialDesignIcon;
 

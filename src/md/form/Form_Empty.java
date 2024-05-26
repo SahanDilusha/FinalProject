@@ -1,4 +1,4 @@
-package javaswingdev.form;
+package md.form;
 
 public class Form_Empty extends javax.swing.JPanel {
 

@@ -1,4 +1,4 @@
-package javaswingdev.swing.table;
+package md.swing.table;
 
 import java.awt.Color;
 import java.awt.Font;

@@ -1,4 +1,4 @@
-package javaswingdev.menu;
+package md.menu;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

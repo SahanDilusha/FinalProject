@@ -1,9 +1,9 @@
-package javaswingdev.swing.table;
+package md.swing.table;
 
 import java.awt.Color;
 import java.awt.Component;
-import javaswingdev.swing.scroll.ScrollBar;
-import javaswingdev.system.SystemColor;
+import md.swing.scroll.ScrollBar;
+import md.system.SystemColor;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;

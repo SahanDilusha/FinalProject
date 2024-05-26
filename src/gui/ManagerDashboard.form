@@ -95,9 +95,9 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javaswingdev.menu.Menu" name="menu">
+            <Component class="md.menu.Menu" name="menu">
             </Component>
-            <Component class="javaswingdev.swing.titlebar.TitleBar" name="titleBar">
+            <Component class="md.swing.titlebar.TitleBar" name="titleBar">
             </Component>
           </SubComponents>
         </Container>

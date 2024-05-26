@@ -52,9 +52,9 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javaswingdev.card.Card" name="card1">
+    <Component class="md.card.Card" name="card1">
     </Component>
-    <Component class="javaswingdev.card.Card" name="card2">
+    <Component class="md.card.Card" name="card2">
       <Properties>
         <Property name="color1" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="e2" green="d3" red="5f" type="rgb"/>
@@ -67,7 +67,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javaswingdev.card.Card" name="card3">
+    <Component class="md.card.Card" name="card3">
       <Properties>
         <Property name="color1" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="8c" green="f3" red="5f" type="rgb"/>
@@ -80,7 +80,7 @@
         </Property>
       </Properties>
     </Component>
-    <Container class="javaswingdev.swing.RoundPanel" name="roundPanel1">
+    <Container class="md.swing.RoundPanel" name="roundPanel1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -121,7 +121,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javaswingdev.swing.table.Table" name="table">
+            <Component class="md.swing.table.Table" name="table">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="5" rowCount="0">

@@ -1,4 +1,4 @@
-package javaswingdev.menu;
+package md.menu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,7 +7,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import javaswingdev.GoogleMaterialDesignIcon;
-import javaswingdev.swing.scroll.ScrollBar;
+import md.swing.scroll.ScrollBar;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;

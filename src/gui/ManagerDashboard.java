@@ -1,9 +1,9 @@
 package gui;
 
 import java.awt.Component;
-import javaswingdev.form.Form_Dashboard;
-import javaswingdev.form.Form_Empty;
-import javaswingdev.menu.EventMenuSelected;
+import md.form.Form_Dashboard;
+import md.form.Form_Empty;
+import md.menu.EventMenuSelected;
 
 public class ManagerDashboard extends javax.swing.JFrame {
     
@@ -47,8 +47,8 @@ public class ManagerDashboard extends javax.swing.JFrame {
 
         background = new javax.swing.JPanel();
         panelMenu = new javax.swing.JPanel();
-        menu = new javaswingdev.menu.Menu();
-        titleBar = new javaswingdev.swing.titlebar.TitleBar();
+        menu = new md.menu.Menu();
+        titleBar = new md.swing.titlebar.TitleBar();
         body = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -150,8 +150,8 @@ public class ManagerDashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
     private javax.swing.JPanel body;
-    private javaswingdev.menu.Menu menu;
+    private md.menu.Menu menu;
     private javax.swing.JPanel panelMenu;
-    private javaswingdev.swing.titlebar.TitleBar titleBar;
+    private md.swing.titlebar.TitleBar titleBar;
     // End of variables declaration//GEN-END:variables
 }
