@@ -1,14 +1,10 @@
-package md.form;
+package acc.form;
 
 public class Form_Empty extends javax.swing.JPanel {
 
     public Form_Empty(String name) {
         initComponents();
         lb.setText("Form " + name);
-    }
-
-    public Form_Empty() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @SuppressWarnings("unchecked")

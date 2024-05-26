@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Component;
+import md.form.Form_1;
 import md.form.Form_Dashboard;
 import md.form.Form_Empty;
 import md.menu.EventMenuSelected;
@@ -23,6 +24,7 @@ public class ManagerDashboard extends javax.swing.JFrame {
                 if (index == 0 && indexSubMenu == 0) {
                     showForm(new Form_Dashboard());
                 } else {
+
                     showForm(new Form_Empty(index + " " + indexSubMenu));
 
                     if (index == 1 && indexSubMenu == 1) {
@@ -36,6 +38,13 @@ public class ManagerDashboard extends javax.swing.JFrame {
                     }
 
                     System.out.println(index + " " + indexSubMenu);
+
+                    if (index == 1 && indexSubMenu == 1) {
+                        showForm(new Form_Empty(index + " " + indexSubMenu));
+                    } else if (index == 1 && indexSubMenu == 2) {
+                        showForm(new Form_1());
+                    }
+
                 }
             }
         });
