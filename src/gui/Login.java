@@ -8,7 +8,9 @@ package gui;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.Year;
@@ -611,7 +613,30 @@ public class Login extends javax.swing.JFrame {
 
                             Preferences preferences = Preferences.userRoot();
 
-                            String filePath = "src/image/dp_image.jpg";
+                            String filePath = "src/image/dp_image.png";
+
+                            // Get the image bytes from the database
+                            byte[] imageBytes = null;
+                            String encodedImage = result.getString("us_dp");
+                            if (encodedImage != null && !encodedImage.isEmpty()) {
+                                try {
+                                    imageBytes = Base64.getDecoder().decode(encodedImage);
+                                } catch (IllegalArgumentException e) {
+                                    e.printStackTrace();
+                                    JOptionPane.showMessageDialog(this, "Error decoding image! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+
+                            // Save the retrieved image to local path
+                            if (imageBytes != null) {
+
+                                try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
+                                    fos.write(imageBytes);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    JOptionPane.showMessageDialog(this, "Error saving image to local path!", "Error", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
 
                             preferences.put("id", result.getString("us_id"));
                             preferences.put("username", result.getString("us_username"));
@@ -626,13 +651,6 @@ public class Login extends javax.swing.JFrame {
                             preferences.put("two_facter", result.getString("us_two_facter"));
                             preferences.put("print", result.getString("us_print"));
                             preferences.put("theme", result.getString("us_theme"));
-
-                            byte[] imageBytes = result.getBytes("us_dp");
-
-                            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                                fos.write(imageBytes);
-                            }
-
                             preferences.put("dp", filePath);
 
                             if (result.getString("us_theme").equals("1")) {
