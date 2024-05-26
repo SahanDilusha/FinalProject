@@ -6,14 +6,14 @@ import md.form.Form_Empty;
 import md.menu.EventMenuSelected;
 
 public class ManagerDashboard extends javax.swing.JFrame {
-    
+
     private static ManagerDashboard main;
-    
+
     public ManagerDashboard() {
         initComponents();
         init();
     }
-    
+
     private void init() {
         main = this;
         titleBar.initJFram(this);
@@ -24,23 +24,35 @@ public class ManagerDashboard extends javax.swing.JFrame {
                     showForm(new Form_Dashboard());
                 } else {
                     showForm(new Form_Empty(index + " " + indexSubMenu));
+
+                    if (index == 1 && indexSubMenu == 1) {
+                        
+                        showForm(new Form_Empty(index + " " + indexSubMenu));
+                        
+                    } else if (index == 1 && indexSubMenu == 2) {
+                        
+                        
+                        
+                    }
+
+                    System.out.println(index + " " + indexSubMenu);
                 }
             }
         });
         menu.setSelectedIndex(0, 0);
     }
-    
+
     public void showForm(Component com) {
         body.removeAll();
         body.add(com);
         body.repaint();
         body.revalidate();
     }
-    
+
     public static ManagerDashboard getMain() {
         return main;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -63,10 +75,10 @@ public class ManagerDashboard extends javax.swing.JFrame {
         panelMenuLayout.setHorizontalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMenuLayout.createSequentialGroup()
-                .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(titleBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelMenuLayout.setVerticalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

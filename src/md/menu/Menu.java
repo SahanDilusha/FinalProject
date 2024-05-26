@@ -12,6 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import md.menu.EventMenuSelected;
+import md.menu.MenuItem;
+import md.menu.ModelMenuItem;
 import net.miginfocom.swing.MigLayout;
 
 public class Menu extends JPanel {
@@ -34,21 +37,15 @@ public class Menu extends JPanel {
         add(scroll);
         addTitle("MAIN");
         addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.DASHBOARD, "Dashboard"));
-        addTitle("WEB APPS");
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.MAIL_OUTLINE, "Email", "Inbox", "Read", "Compose"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.MESSAGE, "Chat"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.PERM_CONTACT_CALENDAR, "Calendar"));
-        addTitle("COMPONENT");
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.WHATSHOT, "UI Kit", "Accordion", "Alerts", "Badges", "Breadcrumbs", "Buttons", "Button group"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.DIRECTIONS_BIKE, "Advanced UI", "Cropper", "Owl Carousel", "Sweet Alert"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.DVR, "Forms", "Basic Elements", "Advanced Elements", "SEditors", "Wizard"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.PIE_CHART_OUTLINED, "Charts", "Apex", "Flot", "Peity", "Sparkline"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.VIEW_LIST, "Table", "Basic Tables", "Data Table"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.INSERT_EMOTICON, "Icons", "Feather Icons", "Flag Icons", "Mdi Icons"));
-        addTitle("PAGES");
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.INBOX, "Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.LOCK_OUTLINE, "Authentication", "Login", "Register"));
-        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.ERROR_OUTLINE, "Error", "404", "500"));
+        addTitle("MANAGE INVOICES");
+        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.INBOX, "Invoice Details", "Invoice ", "Return and Refund"));
+        addTitle("MANAGE STOCK");
+        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.INBOX, " Stock Details", "Stock", "Return Items", "Add New Stock"));
+        addTitle("MANAGE USERS");
+        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.INBOX, "User Details"));
+        addTitle("SETTINGS");
+        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.SETTINGS, "Settings"));
+        addMenuItem(new ModelMenuItem(GoogleMaterialDesignIcon.OFFLINE_PIN, "Logout"));
     }
 
     private JScrollPane createScroll() {
