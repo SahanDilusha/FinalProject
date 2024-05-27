@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
+
 package gui;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -13,10 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.MySQL;
 
-/**
- *
- * @author sahan
- */
+
 public class MangeCompanys extends javax.swing.JDialog {
 
     public static HashMap<String, Integer> statusMap = new HashMap();
@@ -82,6 +76,7 @@ public class MangeCompanys extends javax.swing.JDialog {
         jTable1.clearSelection();
         jButton1.setEnabled(true);
         jTextField1.setEnabled(true);
+        jComboBox1.setSelectedIndex(0);
         
         jTextField1.grabFocus();
 
