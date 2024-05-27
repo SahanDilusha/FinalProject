@@ -20,15 +20,15 @@ public class ManageCategory extends javax.swing.JDialog {
     public ManageCategory(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        loadBrands();
+        loadCategory();
 
     }
 
-    private void loadBrands() {
+    private void loadCategory() {
 
         try {
 
-            ResultSet resultSet = MySQL.execute("SELECT * FROM `barnd`");
+            ResultSet resultSet = MySQL.execute("SELECT * FROM `category`");
 
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
@@ -36,8 +36,8 @@ public class ManageCategory extends javax.swing.JDialog {
             while (resultSet.next()) {
 
                 Vector<String> vector = new Vector<>();
-                vector.add(resultSet.getString("br_id"));
-                vector.add(resultSet.getString("br_name"));
+                vector.add(resultSet.getString("ca_id"));
+                vector.add(resultSet.getString("ca_name"));
                 model.addRow(vector);
 
             }
@@ -220,23 +220,23 @@ public class ManageCategory extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        String brand = jTextField1.getText();
+        String category = jTextField1.getText();
 
-        if (brand.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Brand Name", "Warning", JOptionPane.WARNING_MESSAGE);
+        if (category.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter category Name", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
 
             try {
 
-                ResultSet resultSet = MySQL.execute("SELECT * FROM `barnd` WHERE `br_name`='" + brand + "'");
+                ResultSet resultSet = MySQL.execute("SELECT * FROM `category` WHERE `ca_name`='" + category + "'");
                 if (resultSet.next()) {
-                    JOptionPane.showMessageDialog(this, "Brand Name Alredy Used!", "Warning", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Category Name Alredy Used!", "Warning", JOptionPane.WARNING_MESSAGE);
                 } else {
 
-                    MySQL.execute("INSERT INTO `barnd`(`br_name`)VALUES('" + brand + "')");
+                    MySQL.execute("INSERT INTO `category`(`ca_name`)VALUES('" + category + "')");
 
                     reset();
-                    loadBrands();
+                    loadCategory();
 
                 }
 
@@ -252,34 +252,34 @@ public class ManageCategory extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         if (jTable1.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(this, "Please Select Brand to Update", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please Select category to Update", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
 
-            String brand = jTextField1.getText();
+            String category = jTextField1.getText();
 
             int row = jTable1.getSelectedRow();
             String id = String.valueOf(jTable1.getValueAt(row, 0));
 
             String selectedBrand = String.valueOf(jTable1.getValueAt(row, 1));
 
-            if (brand.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please Enter Brand Name", "Warning", JOptionPane.WARNING_MESSAGE);
+            if (category.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please Enter category Name", "Warning", JOptionPane.WARNING_MESSAGE);
 
-            } else if (selectedBrand.equals(brand)) {
-                JOptionPane.showMessageDialog(this, "Please change Brand name to update", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (selectedBrand.equals(category)) {
+                JOptionPane.showMessageDialog(this, "Please change category name to update", "Warning", JOptionPane.WARNING_MESSAGE);
 
             } else {
 
                 try {
 
-                    ResultSet resultSet = MySQL.execute("SELECT * FROM `barnd` WHERE (`br_name`='" + brand + "') AND `br_id`!='" + id + "' ");
+                    ResultSet resultSet = MySQL.execute("SELECT * FROM `category` WHERE (`ca_name`='" + category + "') AND `ca_id`!='" + id + "' ");
                     if (resultSet.next()) {
-                        JOptionPane.showMessageDialog(this, "Brand Name Alredy Used", "Warning", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Category Name Alredy Used", "Warning", JOptionPane.WARNING_MESSAGE);
                     } else {
 
-                        MySQL.execute("UPDATE `barnd` SET `br_name`='" + brand + "' WHERE `br_id`='" + id + "' ");
+                        MySQL.execute("UPDATE `category` SET `ca_name`='" + category + "' WHERE `ca_id`='" + id + "' ");
                         reset();
-                        loadBrands();
+                        loadCategory();
 
                     }
 
