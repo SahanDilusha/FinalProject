@@ -82,6 +82,7 @@ public class MangeCompanys extends javax.swing.JDialog {
         jTable1.clearSelection();
         jButton1.setEnabled(true);
         jTextField1.setEnabled(true);
+        jComboBox1.setSelectedIndex(0);
         
         jTextField1.grabFocus();
 
