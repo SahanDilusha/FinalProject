@@ -17,14 +17,13 @@ import model.MySQL;
  */
 public class ManageBrands extends javax.swing.JDialog {
 
-    
     public ManageBrands(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         loadBrands();
-        
+
     }
-    
+
     private void loadBrands() {
 
         try {
@@ -48,7 +47,7 @@ public class ManageBrands extends javax.swing.JDialog {
         }
 
     }
-    
+
     private void reset() {
 
         jTextField1.setText("");
@@ -57,9 +56,7 @@ public class ManageBrands extends javax.swing.JDialog {
         jTextField1.grabFocus();
 
     }
-    
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -232,7 +229,7 @@ public class ManageBrands extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         String brand = jTextField1.getText();
 
         if (brand.isEmpty()) {
@@ -261,7 +258,7 @@ public class ManageBrands extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+
         if (jTable1.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(this, "Please Select Brand to Update", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -300,27 +297,24 @@ public class ManageBrands extends javax.swing.JDialog {
 
             }
         }
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        
+
         int row = jTable1.getSelectedRow();
 
         jTextField1.setText(String.valueOf(jTable1.getValueAt(row, 1)));
 
         jButton1.setEnabled(false);
-        
-        if (evt.getClickCount()==2){
-        
-            jButton2.setEnabled(true);
-            
-        }
-        
+
+        jButton2.setEnabled(true);
+
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
-        
+
     }//GEN-LAST:event_jComboBox1ItemStateChanged
 
     /**
