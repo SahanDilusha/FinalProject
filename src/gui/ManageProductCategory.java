@@ -15,9 +15,9 @@ import model.MySQL;
  *
  * @author sahan
  */
-public class ManageCategory extends javax.swing.JDialog {
+public class ManageProductCategory extends javax.swing.JDialog {
 
-    public ManageCategory(java.awt.Frame parent, boolean modal) {
+    public ManageProductCategory(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         loadCategory();
@@ -314,7 +314,7 @@ public class ManageCategory extends javax.swing.JDialog {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ManageCategory dialog = new ManageCategory(new javax.swing.JFrame(), true);
+                ManageProductCategory dialog = new ManageProductCategory(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -33,7 +33,7 @@ import model.ProductData;
  *
  * @author sahan
  */
-public class ManageProduct extends javax.swing.JFrame  {
+public class ManageProduct extends javax.swing.JFrame {
 
     /**
      * Creates new form ManageProduct
@@ -124,7 +124,6 @@ public class ManageProduct extends javax.swing.JFrame  {
         jLabel5 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setUndecorated(true);
         setResizable(false);
@@ -201,7 +200,7 @@ public class ManageProduct extends javax.swing.JFrame  {
         jLabel3.setText("Brand Name -");
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("jLabel4");
+        jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButton4.setText("Add");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -251,6 +250,11 @@ public class ManageProduct extends javax.swing.JFrame  {
         jLabel5.setText("Category Name -");
 
         jButton7.setText("+");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -349,7 +353,7 @@ public class ManageProduct extends javax.swing.JFrame  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -409,9 +413,13 @@ public class ManageProduct extends javax.swing.JFrame  {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-       new ManageBrands(this,true).setVisible(true);
+        new ManageBrands(this, false).setVisible(true);
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        new ManageProductCategory(this, true).setVisible(true);
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -420,11 +428,11 @@ public class ManageProduct extends javax.swing.JFrame  {
 
         FlatLightLaf.setup();
 
-         FlatLightLaf.setup();
+        FlatLightLaf.setup();
 
         // Create and configure the ManageProduct frame
         ManageProduct manageProductFrame = new ManageProduct();
-        manageProductFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         manageProductFrame.setVisible(true);
     }
 

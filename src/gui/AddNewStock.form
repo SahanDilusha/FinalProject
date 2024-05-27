@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="alwaysOnTop" type="boolean" value="true"/>
     <Property name="undecorated" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
@@ -376,6 +377,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Select"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser3">
                     </Component>
@@ -503,6 +507,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Select"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel13">
                       <Properties>
@@ -781,13 +788,13 @@
                                           <Component id="jLabel5" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                                           <Component id="jLabel1" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                                       </Group>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jLabel7" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                                          <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                               <Component id="jFormattedTextField2" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
                                               <Component id="jLabel6" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                                               <Component id="jButton5" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                                           </Group>
+                                          <Component id="jLabel7" min="-2" pref="36" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -881,6 +888,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Select"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton6ActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

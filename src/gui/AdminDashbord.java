@@ -15,6 +15,7 @@ public class AdminDashbord extends javax.swing.JFrame {
 
     /**
      * Creates new form AdminDashbord
+     *
      */
     private final void ResetButtonColors() {
 
@@ -46,9 +47,9 @@ public class AdminDashbord extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jButton32 = new javax.swing.JButton();
         jButton34 = new javax.swing.JButton();
-        jButton35 = new javax.swing.JButton();
-        jButton36 = new javax.swing.JButton();
         jButton39 = new javax.swing.JButton();
+        jButton36 = new javax.swing.JButton();
+        jButton35 = new javax.swing.JButton();
         jButton38 = new javax.swing.JButton();
         jPanelmain = new javax.swing.JPanel();
         jPanelDashdoard = new javax.swing.JPanel();
@@ -106,17 +107,17 @@ public class AdminDashbord extends javax.swing.JFrame {
         });
         jPanel5.add(jButton34);
 
-        jButton35.setBackground(new java.awt.Color(0, 0, 51));
-        jButton35.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton35.setForeground(new java.awt.Color(255, 255, 255));
-        jButton35.setText("Sales Reports");
-        jButton35.setBorder(null);
-        jButton35.addActionListener(new java.awt.event.ActionListener() {
+        jButton39.setBackground(new java.awt.Color(0, 0, 51));
+        jButton39.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton39.setForeground(new java.awt.Color(255, 255, 255));
+        jButton39.setText("Manage Product");
+        jButton39.setBorder(null);
+        jButton39.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton35ActionPerformed(evt);
+                jButton39ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton35);
+        jPanel5.add(jButton39);
 
         jButton36.setBackground(new java.awt.Color(0, 0, 51));
         jButton36.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -130,17 +131,17 @@ public class AdminDashbord extends javax.swing.JFrame {
         });
         jPanel5.add(jButton36);
 
-        jButton39.setBackground(new java.awt.Color(0, 0, 51));
-        jButton39.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton39.setForeground(new java.awt.Color(255, 255, 255));
-        jButton39.setText("Manage Product");
-        jButton39.setBorder(null);
-        jButton39.addActionListener(new java.awt.event.ActionListener() {
+        jButton35.setBackground(new java.awt.Color(0, 0, 51));
+        jButton35.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton35.setForeground(new java.awt.Color(255, 255, 255));
+        jButton35.setText("Reports");
+        jButton35.setBorder(null);
+        jButton35.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton39ActionPerformed(evt);
+                jButton35ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton39);
+        jPanel5.add(jButton35);
 
         jButton38.setBackground(new java.awt.Color(0, 0, 51));
         jButton38.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -237,18 +238,19 @@ public class AdminDashbord extends javax.swing.JFrame {
 
         jButton34.setBackground(new Color(153, 0, 0));
 
-
+        Stock s = new Stock();
+        s.setVisible(true);
 
     }//GEN-LAST:event_jButton34ActionPerformed
 
     private void jButton35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton35ActionPerformed
         ResetButtonColors();
-       
+
     }//GEN-LAST:event_jButton35ActionPerformed
 
     private void jButton36ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton36ActionPerformed
         ResetButtonColors();
-        
+
     }//GEN-LAST:event_jButton36ActionPerformed
 
     private void jButton38ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton38ActionPerformed
@@ -256,16 +258,20 @@ public class AdminDashbord extends javax.swing.JFrame {
         jButton38.setBackground(new Color(153, 0, 0));
         new Settings(this, true).setVisible(true);
         ResetButtonColors();
-        
+
     }//GEN-LAST:event_jButton38ActionPerformed
 
     private void jButton32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton32ActionPerformed
         ResetButtonColors();
-      
+        jButton32.setBackground(new Color(153, 0, 0));
     }//GEN-LAST:event_jButton32ActionPerformed
 
     private void jButton39ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton39ActionPerformed
-        // TODO add your handling code here:
+        ResetButtonColors();
+        jButton39.setBackground(new Color(153, 0, 0));
+        ManageProduct m = new ManageProduct();
+        m.setVisible(true);
+        ResetButtonColors();
     }//GEN-LAST:event_jButton39ActionPerformed
 
     /**
