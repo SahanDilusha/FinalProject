@@ -15,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.ResultSet;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -22,8 +23,10 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import model.LoggerSetup;
 import model.MySQL;
+import model.ProductData;
 
 /**
  *
@@ -31,36 +34,49 @@ import model.MySQL;
  */
 public class ManageProduct extends javax.swing.JDialog {
 
-    
-    
     /**
      * Creates new form ManageProduct
      */
     Preferences preferences = Preferences.userRoot();
-
-    HashMap<String, Object> productMap = new HashMap<>();
-
+    
+    HashMap<String, ProductData> productMap = new HashMap<>();
+    
     private static final Logger logger = LoggerSetup.getLogger();
-
+    
     private final void LodingProduct(String text) {
-
+        
         String q = "SELECT * FROM `product` INNER JOIN `category` ON `product`.`p_category` = `category`.`ca_id` INNER JOIN `barnd` ON `product`.`p_barnd` ON `barnd`.`br_id`";
-
+        
         try {
             ResultSet r = MySQL.execute(q);
-
-            if (r.next()) {
-
+            
+            DefaultTableModel m = (DefaultTableModel) jTable1.getModel();
+            
+            while (r.next()) {
+                
+                Vector<String> v = new Vector<>();
+                v.add(r.getString("P_id"));
+                v.add(r.getString("p_name"));
+                v.add(r.getString("p_"));
+                v.add(r.getString("br_name"));
+                v.add(r.getString("ca_name"));
+                v.add(r.getString("Active"));
+                v.add(r.getString("Deactivate"));
+                
+                m.addRow(v);
+                
             }
-
+            
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
             logger.log(Level.SEVERE, "An error occurred", e);
             JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-
+        
     }
-
+    
     public ManageProduct(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -168,7 +184,7 @@ public class ManageProduct extends javax.swing.JDialog {
 
         jButton1.setText("+");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Deactivate" }));
 
         jLabel3.setText("Brand Name -");
 
@@ -323,23 +339,23 @@ public class ManageProduct extends javax.swing.JDialog {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png");
         fileChooser.setFileFilter(filter);
-
+        
         int returnValue = fileChooser.showOpenDialog(null);
-
+        
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             java.io.File selectedFile = fileChooser.getSelectedFile();
-
+            
             long fileSize = selectedFile.length();
             long maxSize = 2 * 1024 * 1024;
-
+            
             if (fileSize <= maxSize) {
-
+                
                 byte[] resizedImageBytes;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
+                
                 try {
                     BufferedImage image = ImageIO.read(selectedFile);
-
+                    
                     Image resizedImage = image.getScaledInstance(188, 198, Image.SCALE_DEFAULT);
                     BufferedImage resizedBufferedImage = new BufferedImage(188, 198, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2d = resizedBufferedImage.createGraphics();
@@ -347,26 +363,26 @@ public class ManageProduct extends javax.swing.JDialog {
                     g2d.dispose();
                     ImageIO.write(resizedBufferedImage, "png", baos);
                     resizedImageBytes = baos.toByteArray();
-
+                    
                     int option = JOptionPane.showConfirmDialog(this, "Update profile image?", "WARNING", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-
+                    
                     if (option == JOptionPane.YES_OPTION) {
                         // Update database
                         MySQL.execute("UPDATE `users` SET `us_dp` = '" + Base64.getEncoder().encodeToString(resizedImageBytes) + "' WHERE `us_id` = '" + preferences.get("id", "default_value") + "'");
-
+                        
                         JOptionPane.showMessageDialog(this, "Image uploaded successfully.", "INFORMATION", JOptionPane.INFORMATION_MESSAGE);
                     }
-
+                    
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Error uploading image! try again", "INFORMATION", JOptionPane.ERROR_MESSAGE);
                 }
-
+                
             } else {
                 JOptionPane.showMessageDialog(this, "Selected file exceeds the maximum allowed size of 2MB.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
         }
-
+        
 
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -374,9 +390,9 @@ public class ManageProduct extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
+        
         FlatLightLaf.setup();
-
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 ManageProduct dialog = new ManageProduct(new javax.swing.JFrame(), true);
