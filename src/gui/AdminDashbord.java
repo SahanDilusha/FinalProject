@@ -51,7 +51,6 @@ public class AdminDashbord extends javax.swing.JFrame {
         jButton39 = new javax.swing.JButton();
         jButton38 = new javax.swing.JButton();
         jPanelmain = new javax.swing.JPanel();
-        jPanelDashdoard = new javax.swing.JPanel();
         jPanelInventorManagement = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -73,6 +72,7 @@ public class AdminDashbord extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jPanelSalesReports = new javax.swing.JPanel();
         jPanelStaffManagement = new javax.swing.JPanel();
+        jPanelDashdoard = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -211,19 +211,6 @@ public class AdminDashbord extends javax.swing.JFrame {
         );
 
         jPanelmain.setLayout(new java.awt.CardLayout());
-
-        javax.swing.GroupLayout jPanelDashdoardLayout = new javax.swing.GroupLayout(jPanelDashdoard);
-        jPanelDashdoard.setLayout(jPanelDashdoardLayout);
-        jPanelDashdoardLayout.setHorizontalGroup(
-            jPanelDashdoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1476, Short.MAX_VALUE)
-        );
-        jPanelDashdoardLayout.setVerticalGroup(
-            jPanelDashdoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 889, Short.MAX_VALUE)
-        );
-
-        jPanelmain.add(jPanelDashdoard, "card2");
 
         jTabbedPane1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -445,6 +432,19 @@ public class AdminDashbord extends javax.swing.JFrame {
         );
 
         jPanelmain.add(jPanelStaffManagement, "card5");
+
+        javax.swing.GroupLayout jPanelDashdoardLayout = new javax.swing.GroupLayout(jPanelDashdoard);
+        jPanelDashdoard.setLayout(jPanelDashdoardLayout);
+        jPanelDashdoardLayout.setHorizontalGroup(
+            jPanelDashdoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1476, Short.MAX_VALUE)
+        );
+        jPanelDashdoardLayout.setVerticalGroup(
+            jPanelDashdoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 889, Short.MAX_VALUE)
+        );
+
+        jPanelmain.add(jPanelDashdoard, "card2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
