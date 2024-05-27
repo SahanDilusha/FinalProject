@@ -169,6 +169,8 @@ public class CustomerRegistration extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 51)));
+
         jPanel4.setBackground(new java.awt.Color(0, 0, 51));
 
         jButton3.setBackground(new java.awt.Color(204, 0, 51));
