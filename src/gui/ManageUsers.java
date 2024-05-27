@@ -302,7 +302,7 @@ public class ManageUsers extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        this.dispose();
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
