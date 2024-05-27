@@ -23,6 +23,7 @@ import model.MySQL;
 import model.SendEmail;
 import java.util.logging.*;
 import javax.swing.SwingUtilities;
+import model.LoggerSetup;
 
 /**
  *
@@ -36,6 +37,8 @@ public class Login extends javax.swing.JFrame {
     private String email;
     private String name;
     private int tp;
+
+    private static final Logger logger = LoggerSetup.getLogger();
 
     /**
      * Creates new form Login
@@ -611,6 +614,7 @@ public class Login extends javax.swing.JFrame {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                     JOptionPane.showMessageDialog(this, "Error saving image to local path!", "Error", JOptionPane.ERROR_MESSAGE);
+                                    logger.log(Level.WARNING, "An error occurred", e);
                                 }
                             }
 
@@ -700,6 +704,7 @@ public class Login extends javax.swing.JFrame {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.log(Level.SEVERE, "An error occurred", e);
                 JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
 
             }
@@ -791,6 +796,7 @@ public class Login extends javax.swing.JFrame {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "An error occurred", e);
             JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton5ActionPerformed

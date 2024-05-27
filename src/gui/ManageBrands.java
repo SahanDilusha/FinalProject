@@ -240,7 +240,7 @@ public class ManageBrands extends javax.swing.JDialog {
 
                 ResultSet resultSet = MySQL.execute("SELECT * FROM `barnd` WHERE `br_name`='" + brand + "'");
                 if (resultSet.next()) {
-                    JOptionPane.showMessageDialog(this, "Company Number OR Hotline Alredy Used", "Warning", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Brand Name Alredy Used!", "Warning", JOptionPane.WARNING_MESSAGE);
                 } else {
 
                     MySQL.execute("INSERT INTO `barnd`(`br_name`)VALUES('" + brand + "')");
@@ -252,6 +252,8 @@ public class ManageBrands extends javax.swing.JDialog {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
 
         }

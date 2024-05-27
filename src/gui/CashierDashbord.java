@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -32,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.CustomerData;
 import model.InvoiceItem;
+import model.LoggerSetup;
 import model.MySQL;
 import model.SendEmail;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -47,6 +50,8 @@ import net.sf.jasperreports.view.JasperViewer;
 public class CashierDashbord extends javax.swing.JFrame {
 
     Preferences preferences = Preferences.userRoot();
+
+    private static final Logger logger = LoggerSetup.getLogger();
 
     HashMap<String, InvoiceItem> invoiceItemMap = new HashMap<>();
     HashMap<String, InvoiceItem> stockMap = new HashMap<>();
@@ -101,6 +106,7 @@ public class CashierDashbord extends javax.swing.JFrame {
             jLabel46.setText(String.valueOf(rowCount));
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "An error occurred", e);
             e.printStackTrace();
         }
 
@@ -288,6 +294,8 @@ public class CashierDashbord extends javax.swing.JFrame {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "An error occurred", e);
+
         }
 
     }
@@ -348,6 +356,7 @@ public class CashierDashbord extends javax.swing.JFrame {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "An error occurred", e);
         }
 
     }
@@ -1965,6 +1974,8 @@ public class CashierDashbord extends javax.swing.JFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
                 e.printStackTrace();
+                logger.log(Level.WARNING, "An error occurred", e);
+
             }
 
         }
