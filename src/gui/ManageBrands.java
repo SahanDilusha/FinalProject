@@ -21,7 +21,7 @@ public class ManageBrands extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         loadBrands();
-
+        setLocationRelativeTo(parent);
     }
 
     private void loadBrands() {

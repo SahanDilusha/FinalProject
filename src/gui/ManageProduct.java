@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -32,54 +33,59 @@ import model.ProductData;
  *
  * @author sahan
  */
-public class ManageProduct extends javax.swing.JDialog {
+public class ManageProduct extends javax.swing.JFrame  {
 
     /**
      * Creates new form ManageProduct
      */
     Preferences preferences = Preferences.userRoot();
-    
+
     HashMap<String, ProductData> productMap = new HashMap<>();
-    
+
     private static final Logger logger = LoggerSetup.getLogger();
-    
+
+    private ManageProduct(JFrame jFrame, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     private final void LodingProduct(String text) {
-        
-        String q = "SELECT * FROM `product` INNER JOIN `category` ON `product`.`p_category` = `category`.`ca_id` INNER JOIN `barnd` ON `product`.`p_barnd` ON `barnd`.`br_id`";
-        
+
+        String q = "SELECT * FROM `product` INNER JOIN `category` ON `product`.`p_category` = `category`.`ca_id` INNER JOIN `barnd` ON `product`.`p_barnd` = `barnd`.`br_id`";
+
         try {
             ResultSet r = MySQL.execute(q);
-            
+
             DefaultTableModel m = (DefaultTableModel) jTable1.getModel();
-            
+
             while (r.next()) {
-                
+
                 Vector<String> v = new Vector<>();
                 v.add(r.getString("P_id"));
                 v.add(r.getString("p_name"));
-                v.add(r.getString("p_"));
                 v.add(r.getString("br_name"));
                 v.add(r.getString("ca_name"));
-                v.add(r.getString("Active"));
-                v.add(r.getString("Deactivate"));
-                
+
+                if (r.getString("p_status").equals("1")) {
+                    v.add("Active");
+                } else {
+                    v.add("Deactivate");
+                }
+
                 m.addRow(v);
-                
+
             }
-            
-            
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.log(Level.SEVERE, "An error occurred", e);
-            JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-        
+
     }
-    
-    public ManageProduct(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+
+    public ManageProduct() {
+
         initComponents();
+        LodingProduct("");
     }
 
     /**
@@ -119,6 +125,7 @@ public class ManageProduct extends javax.swing.JDialog {
         jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
         setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
@@ -183,6 +190,11 @@ public class ManageProduct extends javax.swing.JDialog {
         jTextField2.setEditable(false);
 
         jButton1.setText("+");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Deactivate" }));
 
@@ -202,6 +214,11 @@ public class ManageProduct extends javax.swing.JDialog {
 
         jButton2.setBackground(new java.awt.Color(0, 204, 204));
         jButton2.setText("Add");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jPanel6.add(jButton2);
 
         jButton5.setText("Update");
@@ -339,23 +356,23 @@ public class ManageProduct extends javax.swing.JDialog {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png");
         fileChooser.setFileFilter(filter);
-        
+
         int returnValue = fileChooser.showOpenDialog(null);
-        
+
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             java.io.File selectedFile = fileChooser.getSelectedFile();
-            
+
             long fileSize = selectedFile.length();
             long maxSize = 2 * 1024 * 1024;
-            
+
             if (fileSize <= maxSize) {
-                
+
                 byte[] resizedImageBytes;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                
+
                 try {
                     BufferedImage image = ImageIO.read(selectedFile);
-                    
+
                     Image resizedImage = image.getScaledInstance(188, 198, Image.SCALE_DEFAULT);
                     BufferedImage resizedBufferedImage = new BufferedImage(188, 198, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2d = resizedBufferedImage.createGraphics();
@@ -363,48 +380,52 @@ public class ManageProduct extends javax.swing.JDialog {
                     g2d.dispose();
                     ImageIO.write(resizedBufferedImage, "png", baos);
                     resizedImageBytes = baos.toByteArray();
-                    
+
                     int option = JOptionPane.showConfirmDialog(this, "Update profile image?", "WARNING", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-                    
+
                     if (option == JOptionPane.YES_OPTION) {
                         // Update database
                         MySQL.execute("UPDATE `users` SET `us_dp` = '" + Base64.getEncoder().encodeToString(resizedImageBytes) + "' WHERE `us_id` = '" + preferences.get("id", "default_value") + "'");
-                        
+
                         JOptionPane.showMessageDialog(this, "Image uploaded successfully.", "INFORMATION", JOptionPane.INFORMATION_MESSAGE);
                     }
-                    
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Error uploading image! try again", "INFORMATION", JOptionPane.ERROR_MESSAGE);
                 }
-                
+
             } else {
                 JOptionPane.showMessageDialog(this, "Selected file exceeds the maximum allowed size of 2MB.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
         }
-        
+
 
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        JOptionPane.showMessageDialog(this, "Please Check your connection and try again!", "Warning", JOptionPane.WARNING_MESSAGE);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+       new ManageBrands(this,true).setVisible(true);
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         FlatLightLaf.setup();
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ManageProduct dialog = new ManageProduct(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+
+         FlatLightLaf.setup();
+
+        // Create and configure the ManageProduct frame
+        ManageProduct manageProductFrame = new ManageProduct();
+        manageProductFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        manageProductFrame.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
